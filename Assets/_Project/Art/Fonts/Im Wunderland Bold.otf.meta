@@ -1,0 +1,23 @@
+fileFormatVersion: 2
+guid: 3acb9c13bd14d7e4794b750dea82e4e8
+timeCreated: 1525926021
+licenseType: Free
+TrueTypeFontImporter:
+  externalObjects: {}
+  serializedVersion: 4
+  fontSize: 16
+  forceTextureCase: -2
+  characterSpacing: 0
+  characterPadding: 1
+  includeFontData: 1
+  fontName: Im Wunderland
+  fontNames:
+  - Im Wunderland
+  fallbackFontReferences: []
+  customCharacters: 
+  fontRenderingMode: 0
+  ascentCalculationMode: 1
+  useLegacyBoundsCalculation: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
