@@ -11,4 +11,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 83f73fca24d8d0f42ace5b7b1f4e2f9f, type: 3}
   m_Name: Club
   m_EditorClassIdentifier: 
-  Image: {fileID: 0}
+  Image: {fileID: 21300000, guid: d20c6fc903c0e8d45a592c9c6864466c, type: 3}
