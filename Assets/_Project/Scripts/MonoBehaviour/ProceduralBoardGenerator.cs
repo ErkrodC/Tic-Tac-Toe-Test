@@ -2,13 +2,13 @@
 
 public class ProceduralBoardGenerator : MonoBehaviour {
 
-	public IntReference TilesPerSide;
-	public GameObject TilePrefab;
+	[SerializeField] private GameSettings settings;
+	[SerializeField] private GameObject tilePrefab;
 
 	public void GenerateBoard() {
-		int totalNumberOfTiles = TilesPerSide * TilesPerSide;
+		int totalNumberOfTiles = settings.TilesPerSide * settings.TilesPerSide;
 		for (int i = 0; i < totalNumberOfTiles; i++) {
-			Instantiate(TilePrefab, transform);
+			Instantiate(tilePrefab, transform);
 		}
 	}
 }

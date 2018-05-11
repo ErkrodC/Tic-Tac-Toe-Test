@@ -3,6 +3,8 @@ using UnityEngine;
 
 public class GameController : MonoBehaviour {
 
+	[SerializeField] private GameSettings settings;
+	
 	public void StartGame() {
 		
 	}
