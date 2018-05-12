@@ -2,7 +2,7 @@
 using UnityEngine.UI;
 
 [ExecuteInEditMode]
-public class AutoSquareGridLayout : GridLayoutGroup {
+public class TTTBoardLayout : GridLayoutGroup {
 
 	[SerializeField] private GameSettings settings;
     

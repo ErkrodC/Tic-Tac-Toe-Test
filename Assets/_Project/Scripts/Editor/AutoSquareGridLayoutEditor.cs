@@ -1,6 +1,6 @@
 ﻿using UnityEditor;
 
-[CustomEditor(typeof(AutoSquareGridLayout),false), CanEditMultipleObjects]
+[CustomEditor(typeof(TTTBoardLayout),false), CanEditMultipleObjects]
 public class AutoSquareGridLayoutEditor : Editor {
 	private SerializedProperty settings;
 	private SerializedProperty padding;
