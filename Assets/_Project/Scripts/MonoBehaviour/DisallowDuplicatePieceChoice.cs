@@ -6,18 +6,14 @@ using UnityEngine.UI;
 public class DisallowDuplicatePieceChoice : MonoBehaviour {
 
 	[SerializeField] private List<Toggle> playerOnePieceChoices, playerTwoPieceChoices;
-	private int numberOfChoices;
 
 	private void Start() {
-		numberOfChoices = playerOnePieceChoices.Count;
 		OnValueChanged();
 	}
 
 	public void OnValueChanged() {
-		Toggle selectedToggle;
-		
 		// de-interactable player two option which player one has selected, and vice versa
-		for (int i = 0; i < numberOfChoices; i++) {
+		for (int i = 0; i < playerOnePieceChoices.Count; i++) {
 			Toggle player1Toggle = playerOnePieceChoices[i];
 			Toggle player2Toggle = playerTwoPieceChoices[i];
 
@@ -29,9 +25,6 @@ public class DisallowDuplicatePieceChoice : MonoBehaviour {
 				player1Toggle.interactable = true;
 				player2Toggle.interactable = true;
 			}
-			
 		}
-		
-		
 	}
 }
