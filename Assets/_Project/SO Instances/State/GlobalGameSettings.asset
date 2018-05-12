@@ -1,0 +1,16 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bb51b1625b169c6409f23072afa392d5, type: 3}
+  m_Name: GlobalGameSettings
+  m_EditorClassIdentifier: 
+  TilesPerSide: {fileID: 11400000, guid: ef2a94f3b0fd1b346811e256d6c87f8e, type: 2}
+  Player1Piece: {fileID: 11400000, guid: 47df10f81f85f7e41bc70861a1c79c12, type: 2}
+  Player2Piece: {fileID: 11400000, guid: dcc1606d29f563f4fb1adf79ab36cf30, type: 2}

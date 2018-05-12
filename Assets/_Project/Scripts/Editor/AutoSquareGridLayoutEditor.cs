@@ -1,8 +1,8 @@
 ﻿using UnityEditor;
 
-[CustomEditor(typeof(AutoSquareGridLayout),false), CanEditMultipleObjects]
+[CustomEditor(typeof(TTTBoardLayout),false), CanEditMultipleObjects]
 public class AutoSquareGridLayoutEditor : Editor {
-	private SerializedProperty itemsPerSide;
+	private SerializedProperty settings;
 	private SerializedProperty padding;
 	private SerializedProperty spacing;
 	private SerializedProperty startCorner;
@@ -10,7 +10,7 @@ public class AutoSquareGridLayoutEditor : Editor {
 	private SerializedProperty childAlignment;
 
 	private void OnEnable() {
-		itemsPerSide = serializedObject.FindProperty("ItemsPerSide");
+		settings = serializedObject.FindProperty("settings");
 		padding = serializedObject.FindProperty("m_Padding");
 		spacing = serializedObject.FindProperty("m_Spacing");
 		startCorner = serializedObject.FindProperty("m_StartCorner");
@@ -21,7 +21,7 @@ public class AutoSquareGridLayoutEditor : Editor {
 	public override void OnInspectorGUI() {
 		serializedObject.Update();
         
-		EditorGUILayout.PropertyField(itemsPerSide, true);
+		EditorGUILayout.PropertyField(settings, true);
 		EditorGUILayout.PropertyField(padding, true);
 		EditorGUILayout.PropertyField(spacing, true);
 		EditorGUILayout.PropertyField(startCorner, true);
