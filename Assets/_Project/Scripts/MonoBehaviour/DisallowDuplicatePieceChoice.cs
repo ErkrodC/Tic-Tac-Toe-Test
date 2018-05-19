@@ -1,10 +1,13 @@
-﻿using System.Collections.Generic;
-using System.Linq;
+﻿// NOTE List<Toggle>'s are assigned via inspector 
+#pragma warning disable 0649
+
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class DisallowDuplicatePieceChoice : MonoBehaviour {
 
+	
 	[SerializeField] private List<Toggle> playerOnePieceChoices, playerTwoPieceChoices;
 
 	private void Start() {

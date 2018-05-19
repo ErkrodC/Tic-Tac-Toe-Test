@@ -8,6 +8,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 10f29554fbb1e19479a407c0ed267f15, type: 3}
-  m_Name: GamePause
+  m_Script: {fileID: 11500000, guid: 9825b1421d0f14440a587ba0a16c9aec, type: 3}
+  m_Name: CurrentTurn
   m_EditorClassIdentifier: 
+  Turn: 0

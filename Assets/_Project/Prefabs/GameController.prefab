@@ -639,7 +639,6 @@ GameObject:
   m_Component:
   - component: {fileID: 224185247075384372}
   - component: {fileID: 222048984802769742}
-  - component: {fileID: 225001538471741954}
   - component: {fileID: 114410470314957394}
   - component: {fileID: 114231454271605726}
   - component: {fileID: 114167888474380890}
@@ -678,8 +677,7 @@ GameObject:
   - component: {fileID: 4959272251414414}
   - component: {fileID: 114307525117309286}
   - component: {fileID: 114649436279977718}
-  - component: {fileID: 114764932864084774}
-  - component: {fileID: 114989905798586260}
+  - component: {fileID: 114293571323878118}
   m_Layer: 0
   m_Name: GameController
   m_TagString: Untagged
@@ -1174,6 +1172,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4cadca816fdc4a646aacee9b1b80e82b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  runningBoard: {fileID: 11400000, guid: 05dbe82f8f1ce8d46b603e30576b19cd, type: 2}
   settings: {fileID: 11400000, guid: 476acd98f06fd3e44bd9d8c1d94550bd, type: 2}
   tilePrefab: {fileID: 1915275118124152, guid: f21085a7f76f79440accb5040f6bb06e, type: 2}
 --- !u!114 &114197707660496602
@@ -1271,7 +1270,7 @@ MonoBehaviour:
   m_ChildAlignment: 0
   m_StartCorner: 0
   m_StartAxis: 0
-  m_CellSize: {x: 169.04823, y: 167.88603}
+  m_CellSize: {x: 128.03618, y: 127.16452}
   m_Spacing: {x: -5, y: -5}
   m_Constraint: 0
   m_ConstraintCount: 2
@@ -1419,6 +1418,34 @@ MonoBehaviour:
     m_TypeName: UnityEngine.UI.Toggle+ToggleEvent, UnityEngine.UI, Version=1.0.0.0,
       Culture=neutral, PublicKeyToken=null
   m_IsOn: 1
+--- !u!114 &114293571323878118
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1900341631169916}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d5bbc414ea0e5924fbed8d95e5a02b6e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Event: {fileID: 11400000, guid: 153ebdc210e79414ab19a5d98dd24d12, type: 2}
+  Response:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 114307525117309286}
+        m_MethodName: ChangeTurn
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
+      Culture=neutral, PublicKeyToken=null
 --- !u!114 &114298210712002108
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1498,11 +1525,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b5ec60a66cb6b2145be4107cd264b5b1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  gameStartEvent: {fileID: 11400000, guid: 36db869f69807114db6ac900ea7029e2, type: 2}
+  runningBoard: {fileID: 11400000, guid: 05dbe82f8f1ce8d46b603e30576b19cd, type: 2}
+  gameStartedEvent: {fileID: 11400000, guid: 36db869f69807114db6ac900ea7029e2, type: 2}
+  turnChangedEvent: {fileID: 11400000, guid: 9fbd69fb96a078c43b5252a6f24293ad, type: 2}
   settings: {fileID: 11400000, guid: 476acd98f06fd3e44bd9d8c1d94550bd, type: 2}
   player1PieceToggleGroup: {fileID: 114298210712002108}
   player2PieceToggleGroup: {fileID: 114100321586107486}
   gameModeToggleGroup: {fileID: 114152905148712674}
+  currentTurn: {fileID: 11400000, guid: dbb9aafc5b88e0f49ad6037c8ef6a20f, type: 2}
 --- !u!114 &114311116420331136
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -2764,34 +2794,6 @@ MonoBehaviour:
     m_TypeName: UnityEngine.UI.Toggle+ToggleEvent, UnityEngine.UI, Version=1.0.0.0,
       Culture=neutral, PublicKeyToken=null
   m_IsOn: 0
---- !u!114 &114764932864084774
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1900341631169916}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d5bbc414ea0e5924fbed8d95e5a02b6e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Event: {fileID: 11400000, guid: df44bc6e2aef3e340b2fcf4302d8e989, type: 2}
-  Response:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 114307525117309286}
-        m_MethodName: PauseGame
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
-      Culture=neutral, PublicKeyToken=null
 --- !u!114 &114767147491107306
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -3341,34 +3343,6 @@ MonoBehaviour:
   m_FillAmount: 1
   m_FillClockwise: 1
   m_FillOrigin: 0
---- !u!114 &114989905798586260
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1900341631169916}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d5bbc414ea0e5924fbed8d95e5a02b6e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Event: {fileID: 11400000, guid: 9fbd69fb96a078c43b5252a6f24293ad, type: 2}
-  Response:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 114307525117309286}
-        m_MethodName: ChangeTurn
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
-      Culture=neutral, PublicKeyToken=null
 --- !u!222 &222034655765421542
 CanvasRenderer:
   m_ObjectHideFlags: 1
@@ -4435,17 +4409,6 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!225 &225001538471741954
-CanvasGroup:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1836418350146120}
-  m_Enabled: 1
-  m_Alpha: 1
-  m_Interactable: 1
-  m_BlocksRaycasts: 1
-  m_IgnoreParentGroups: 0
 --- !u!225 &225161809008442590
 CanvasGroup:
   m_ObjectHideFlags: 1
