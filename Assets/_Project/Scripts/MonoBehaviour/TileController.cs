@@ -4,7 +4,9 @@ using UnityEngine.UI;
 
 public class TileController : MonoBehaviour {
 
-	[HideInInspector] public TileInfo TileInfo;
+	// Tile info
+	[SerializeField] public int Row, Column;
+	[SerializeField] public bool IsOccupied;
 
 	[SerializeField] private TicTacToeBoard runningBoard;
 	[SerializeField] private GameSettings settings;
@@ -13,27 +15,34 @@ public class TileController : MonoBehaviour {
 	[SerializeField] private GameEvent changeTurnRequest;
 	
 	public void OnClick() {
-		if (!TileInfo.IsOccupied) {
-			switch (currentTurn.Turn) {
+		if (!IsOccupied) {
+			
+			// overlay tile image with appropriate piece sprite, and set the corresponding tile in board data structure to the appropriate piece SO
+			switch (currentTurn.Player) {
 				case Player.One:
-					TileInfo.OccupyingPiece = settings.Player1Piece;
 					SetPieceImage(settings.Player1Piece.Image);
-					runningBoard.SetTile(TileInfo.Row, TileInfo.Column, settings.Player1Piece);
+					runningBoard.SetTile(Row, Column, settings.Player1Piece);
 					break;
 				case Player.Two:
-					TileInfo.OccupyingPiece = settings.Player2Piece;
 					SetPieceImage(settings.Player2Piece.Image);
-					runningBoard.SetTile(TileInfo.Row, TileInfo.Column, settings.Player2Piece);
+					runningBoard.SetTile(Row, Column, settings.Player2Piece);
 					break;
 			}
 			
-			TileInfo.IsOccupied = true;
+			IsOccupied = true;
 			changeTurnRequest.Raise();
 		}
+	}
+
+	public void ResetTile() {
+		pieceImageComponent.enabled = false;
+		pieceImageComponent.sprite = null;
+		IsOccupied = false;
 	}
 
 	private void SetPieceImage(Sprite sprite) {
 		pieceImageComponent.sprite = sprite;
 		pieceImageComponent.enabled = true;
 	}
+
 }

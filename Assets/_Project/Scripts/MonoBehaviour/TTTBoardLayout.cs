@@ -6,6 +6,7 @@ public class TTTBoardLayout : GridLayoutGroup {
 
 	[SerializeField] private GameSettings settings;
     
+	// used to auto size tiles in grid layout group
 	public override void CalculateLayoutInputHorizontal() {
 		base.CalculateLayoutInputHorizontal();
 

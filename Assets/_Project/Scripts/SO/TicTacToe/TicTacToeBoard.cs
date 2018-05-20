@@ -4,13 +4,14 @@ using UnityEngine;
 public class TicTacToeBoard : ScriptableObject {
 
 	public int TilesPerSide;
-	public List<List<TicTacToePiece>> Matrix = new List<List<TicTacToePiece>>();
+	public List<List<TicTacToePiece>> Matrix;
 
 	[SerializeField] private GameSettings settings;
 
 	// Returns a copy of the passed board
 	public static TicTacToeBoard SnapshotBoard(TicTacToeBoard boardToCopy) {
 		TicTacToeBoard board = CreateInstance<TicTacToeBoard>();
+		board.InitializeBoard(boardToCopy.TilesPerSide);
 		board.TilesPerSide = boardToCopy.TilesPerSide;
 		
 		for (int i = 0; i < board.TilesPerSide; i++) {
@@ -25,7 +26,8 @@ public class TicTacToeBoard : ScriptableObject {
 	}
 
 	// Initializes Matrix with null values at each coordinate
-	public void NewEmptyBoard(int tilesPerSide) {
+	public void InitializeBoard(int tilesPerSide) {
+		Matrix = new List<List<TicTacToePiece>>();
 		TilesPerSide = tilesPerSide;
 
 		for (int i = 0; i < TilesPerSide; i++) {
@@ -37,6 +39,10 @@ public class TicTacToeBoard : ScriptableObject {
 		}
 	}
 
+	public void SetTile(int row, int column, TicTacToePiece piece) {
+		Matrix[row][column] = piece;
+	}
+
 	// Sets each coordinate in Matrix to null. Note that no new lists are created in this method
 	public void ResetBoard() {
 		for (int i = 0; i < TilesPerSide; i++) {
@@ -44,10 +50,6 @@ public class TicTacToeBoard : ScriptableObject {
 				Matrix[i][j] = null;
 			}
 		}
-	}
-
-	public void SetTile(int row, int column, TicTacToePiece piece) {
-		Matrix[row][column] = piece;
 	}
 
 	// Checks if the passed board meets a tic tac toe end condiition.

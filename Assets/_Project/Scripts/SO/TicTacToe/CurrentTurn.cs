@@ -2,9 +2,9 @@
 
 public class CurrentTurn : ScriptableObject {
 
-	public Player Turn = Player.One;
+	public Player Player = Player.One;
 
 	public void Toggle() {
-		Turn = Turn == Player.One ? Player.Two : Player.One;
+		Player = Player == Player.One ? Player.Two : Player.One;
 	}
 }
