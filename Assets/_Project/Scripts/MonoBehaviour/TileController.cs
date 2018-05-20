@@ -14,7 +14,7 @@ public class TileController : MonoBehaviour {
 	
 	public void OnClick() {
 		if (!TileInfo.IsOccupied) {
-			switch (currentTurn.Turn) {
+			switch (currentTurn.Player) {
 				case Player.One:
 					TileInfo.OccupyingPiece = settings.Player1Piece;
 					SetPieceImage(settings.Player1Piece.Image);
@@ -32,8 +32,16 @@ public class TileController : MonoBehaviour {
 		}
 	}
 
+	public void ResetTile() {
+		pieceImageComponent.enabled = false;
+		pieceImageComponent.sprite = null;
+		TileInfo.OccupyingPiece = null;
+		TileInfo.IsOccupied = false;
+	}
+
 	private void SetPieceImage(Sprite sprite) {
 		pieceImageComponent.sprite = sprite;
 		pieceImageComponent.enabled = true;
 	}
+
 }

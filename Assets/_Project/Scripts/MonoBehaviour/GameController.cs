@@ -2,23 +2,26 @@
 using System.Collections.Generic;
 using System.Linq;
 using JetBrains.Annotations;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class GameController : MonoBehaviour {
 
 	[SerializeField] private TicTacToeBoard runningBoard;
-	[SerializeField] private GameEvent gameStartedEvent, turnChangedEvent;
+	[SerializeField] private GameEvent gameStartedEvent, turnChangedEvent, displayGameOverPanelRequest, resetRunningGameUIRequest;
 	[SerializeField] private GameSettings settings;
 	[SerializeField] private ToggleGroup player1PieceToggleGroup, player2PieceToggleGroup, gameModeToggleGroup;
 	[SerializeField] private CurrentTurn currentTurn;
+	[SerializeField] private TextMeshProUGUI gameOverStateText;
+	
 
 	private int turnCount;
 	private readonly LinkedList<TicTacToeBoard> boardsLinkedList = new LinkedList<TicTacToeBoard>();
 
 	public void StartGame() {
 		turnCount = 0;
-		currentTurn.Turn = Player.One;
+		currentTurn.Player = Player.One;
 		
 		// Gather game settings UI's active toggles
 		settings.Player1Piece = player1PieceToggleGroup.ActiveToggles().First().GetComponent<TicTacToePieceBinding>().Piece;
@@ -26,7 +29,7 @@ public class GameController : MonoBehaviour {
 		settings.TilesPerSide.SetValue(gameModeToggleGroup.ActiveToggles().First().GetComponent<GameModeBinding>().TilesPerSide);
 		
 		// Initialize the starting board, and add its snapshot to the history of boards
-		runningBoard.NewEmptyBoard(settings.TilesPerSide);
+		runningBoard.InitializeBoard(settings.TilesPerSide);
 		boardsLinkedList.AddFirst(TicTacToeBoard.SnapshotBoard(runningBoard));
 		
 		//raise event for other scripts to respond
@@ -46,11 +49,32 @@ public class GameController : MonoBehaviour {
 	public void EndGame(GameOverState gameOverState) {
 		switch (gameOverState) {
 			case GameOverState.Player1Wins:
+				gameOverStateText.text = "Player One Wins!";
 				break;
 			case GameOverState.Player2Wins:
+				gameOverStateText.text = "Player Two Wins!";
 				break;
 			case GameOverState.Tie:
+				gameOverStateText.text = "Tie";
 				break;
 		}
+		
+		displayGameOverPanelRequest.Raise();
+	}
+
+	public void RestartGame() {
+		turnCount = 0;
+		currentTurn.Player = Player.One;
+		
+		runningBoard.ResetBoard();
+		
+		boardsLinkedList.Clear();
+		boardsLinkedList.AddFirst(TicTacToeBoard.SnapshotBoard(runningBoard));
+		
+		resetRunningGameUIRequest.Raise();
+	}
+
+	public void ExitGame() {
+		Application.Quit();
 	}
 }
