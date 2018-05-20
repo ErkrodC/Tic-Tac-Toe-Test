@@ -7,10 +7,11 @@ public class MusicController : MonoBehaviour {
 
 	[SerializeField] private MusicPlaylist playlist;
 	[SerializeField] private AudioSource source;
-	private int counter;
+	private int counter = 0;
 
 	private void Start() {
-		counter = Random.Range(0, playlist.Songs.Count);
+		source.clip = playlist.Songs[0]; // kinda just like the first song :P
+		source.Play();
 		StartCoroutine(PlayMusic());
 	}
 
@@ -19,7 +20,7 @@ public class MusicController : MonoBehaviour {
 	}
 
 	public void NextTrack() {
-		source.Stop();
+		source.Stop(); // stopping music triggers PlayMusic coroutine to go to next track
 		source.mute = false;
 	}
 

@@ -36,6 +36,8 @@ public class GameController : MonoBehaviour {
 		gameStartedEvent.Raise();
 	}
 
+	// adds current board to history, and changes players' turns
+	// checks current board in case the game is over;
 	public void ChangeTurn() {
 		boardsLinkedList.AddLast(TicTacToeBoard.SnapshotBoard(runningBoard));
 		currentTurn.Toggle();
@@ -46,6 +48,7 @@ public class GameController : MonoBehaviour {
 		else turnChangedEvent.Raise();
 	}
 
+	// handles displaying game over information to screen 
 	public void EndGame(GameOverState gameOverState) {
 		switch (gameOverState) {
 			case GameOverState.Player1Wins:
@@ -59,9 +62,11 @@ public class GameController : MonoBehaviour {
 				break;
 		}
 		
+		// game over panel listens for this event to know when to activate
 		displayGameOverPanelRequest.Raise();
 	}
 
+	// reset game, calling methods that try to minimize "new" uses
 	public void RestartGame() {
 		turnCount = 0;
 		currentTurn.Player = Player.One;
