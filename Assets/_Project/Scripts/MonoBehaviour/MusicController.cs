@@ -8,35 +8,30 @@ public class MusicController : MonoBehaviour {
 	[SerializeField] private MusicPlaylist playlist;
 	[SerializeField] private AudioSource source;
 	private int counter;
-	private bool amMuted;
 
 	private void Start() {
 		counter = Random.Range(0, playlist.Songs.Count);
-		StartCoroutine(PlayPlaylist());
+		StartCoroutine(PlayMusic());
 	}
 
 	public void ToggleMusic() {
-		if (amMuted) {
-			StartCoroutine(PlayPlaylist());
-		} else {
-			StopCoroutine(PlayPlaylist());
-			source.Stop();
-		}
-
-		amMuted = !amMuted;
+		source.mute = !source.mute;
 	}
 
-	private IEnumerator PlayPlaylist() {
-		while (true) {
-			if (counter == playlist.Songs.Count) counter = 0;
+	public void NextTrack() {
+		source.Stop();
+		source.mute = false;
+	}
 
-			if (!amMuted) {
-				source.clip = playlist.Songs[counter];
-				source.Play();
-				counter++;
-			}
+	private IEnumerator PlayMusic() {
+		while (true) {
+			counter++;
 			
 			yield return new WaitWhile(() => source.isPlaying);
+			
+			counter %= playlist.Songs.Count;
+			source.clip = playlist.Songs[counter];
+			source.Play();
 		}
 	}
 }
