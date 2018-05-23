@@ -21,7 +21,6 @@ public class MusicController : MonoBehaviour {
 
 	public void NextTrack() {
 		source.Stop(); // stopping music triggers PlayMusic coroutine to go to next track
-		source.mute = false;
 	}
 
 	private IEnumerator PlayMusic() {
