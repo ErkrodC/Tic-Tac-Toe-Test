@@ -16,8 +16,6 @@ public class TestGameWindow : EditorWindow {
 
 	// Init private variables.
 	private void OnEnable() {
-		gameController = GameObject.FindGameObjectWithTag("GameController").GetComponent<GameController>();
-		
 		string globalSettingsAssetPath = AssetDatabase.GUIDToAssetPath(AssetDatabase.FindAssets($"t:{typeof(GameSettings).Name}")[0]); // global settings is a "singleton" SO
 		settings = AssetDatabase.LoadAssetAtPath<GameSettings>(globalSettingsAssetPath);
 	}
@@ -27,6 +25,8 @@ public class TestGameWindow : EditorWindow {
 	}
 
 	private void OnGUI() {
+		if (gameController == null) gameController = GameObject.FindGameObjectWithTag("GameController").GetComponent<GameController>();
+		
 		if (Application.isPlaying && gameController.InGame) {
 			MoveHistory generatedGame;
 		
