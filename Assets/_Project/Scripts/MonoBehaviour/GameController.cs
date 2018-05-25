@@ -8,6 +8,8 @@ using UnityEngine.UI;
 
 public class GameController : MonoBehaviour {
 
+	[HideInInspector] public bool InGame = false;
+	
 	[SerializeField] private TicTacToeBoard runningBoard;
 	[SerializeField] private GameEvent gameStartedEvent, turnChangedEvent, displayGameOverPanelRequest, resetRunningGameUIRequest;
 	[SerializeField] private GameSettings settings;
@@ -34,6 +36,8 @@ public class GameController : MonoBehaviour {
 		
 		//raise event for other scripts to respond
 		gameStartedEvent.Raise();
+
+		InGame = true;
 	}
 
 	// adds current board to history, and changes players' turns
@@ -63,6 +67,7 @@ public class GameController : MonoBehaviour {
 		}
 		
 		// game over panel listens for this event to know when to activate
+		InGame = false;
 		displayGameOverPanelRequest.Raise();
 	}
 
@@ -76,6 +81,7 @@ public class GameController : MonoBehaviour {
 		boardsLinkedList.Clear();
 		boardsLinkedList.AddFirst(TicTacToeBoard.SnapshotBoard(runningBoard));
 		
+		InGame = true;
 		resetRunningGameUIRequest.Raise();
 	}
 

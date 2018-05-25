@@ -5,8 +5,8 @@ using MoveHistory = System.Collections.Generic.LinkedList<TicTacToeBoard>;
 
 public class TestGameWindow : EditorWindow {
 
+	private GameController gameController;
 	private GameSettings settings;
-	private TestGameConstraint selectedConstraint;
 	
 	[MenuItem("Debug/Play Test TTT Game")]
 	public static void OpenWindow() {
@@ -14,14 +14,51 @@ public class TestGameWindow : EditorWindow {
 		window.minSize = new Vector2(600, 480);
 	}
 
-	// Init private variable "settings".
-	private void OnValidate() {
+	// Init private variables.
+	private void OnEnable() {
+		gameController = GameObject.FindGameObjectWithTag("GameController").GetComponent<GameController>();
+		
 		string globalSettingsAssetPath = AssetDatabase.GUIDToAssetPath(AssetDatabase.FindAssets($"t:{typeof(GameSettings).Name}")[0]); // global settings is a "singleton" SO
 		settings = AssetDatabase.LoadAssetAtPath<GameSettings>(globalSettingsAssetPath);
 	}
 
-	private void OnGUI() {
+	private void OnInspectorUpdate() {
+		Repaint();
+	}
 
+	private void OnGUI() {
+		if (Application.isPlaying && gameController.InGame) {
+			MoveHistory generatedGame;
+		
+			GUILayout.Label("Select desired winning line.");
+			
+			for (int i = 0; i < settings.TilesPerSide; i++) {
+				if (GUILayout.Button($"Row {i + 1}")) {
+					TestGameConstraint constraint = new TestGameConstraint(){LineType = TestGameConstraint.WinLineType.Row, Index = i};
+					generatedGame = GenerateFullGame(constraint);
+					RunTestGame(generatedGame);
+				}
+			}
+
+			for (int i = 0; i < settings.TilesPerSide; i++) {
+				if (GUILayout.Button($"Column {i + 1}")) {
+					TestGameConstraint constraint = new TestGameConstraint(){LineType = TestGameConstraint.WinLineType.Column, Index = i};
+					generatedGame = GenerateFullGame(constraint);
+					RunTestGame(generatedGame);
+				}
+			}
+
+			for (int i = 0; i < 2; i++) {
+				string buttonText = i == 0 ? "TopLeft-BottomRight Diagonal" : "TopRight-BottomLeft Diagonal";
+				if (GUILayout.Button(buttonText)) {
+					TestGameConstraint constraint = new TestGameConstraint(){LineType = TestGameConstraint.WinLineType.Diagonal, Index = i};
+					generatedGame = GenerateFullGame(constraint);
+					RunTestGame(generatedGame);
+				}
+			}
+		} else {
+			GUILayout.Label("Game must be started in order to test.");
+		}
 	}
 
 	// Returns a procedurally generated linked list of boards that represents a TTT game from start to finish.
@@ -38,6 +75,10 @@ public class TestGameWindow : EditorWindow {
 		}
 
 		return null;
+	}
+
+	private void RunTestGame(MoveHistory generatedGame) {
+		
 	}
 }
 
