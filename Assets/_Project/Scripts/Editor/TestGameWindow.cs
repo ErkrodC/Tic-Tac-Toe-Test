@@ -9,24 +9,13 @@ using Random = UnityEngine.Random;
 
 public class TestGameWindow : EditorWindow {
 	
-	private enum GameEndType { Row, Column, Diagonal}
-	
-	private struct DesiredEndGame { 
-		public readonly GameEndType GameEndType;
-		public readonly int Index;	// row or column index of desired winning row/column. For diagonals: topLeft-bottomRight is 0, topRight-bottomLeft is 1. 
-
-		public DesiredEndGame(GameEndType gameEndType, int index) {
-			GameEndType = gameEndType;
-			Index = index;
-		}
-	}
-
 	[SerializeField] private GameSettings settings;
 	[SerializeField] private TicTacToeBoard runningBoard;
 	[SerializeField] private GameEvent changeTurnRequest;
 	private GameController gameController;
 	private bool runningTestGame = false;
 	private IEnumerator coroutine;
+	double moveDelay = 0.5;
 
 	[MenuItem("Debug/Play Test TTT Game")]
 	public static void OpenWindow() {
@@ -35,14 +24,11 @@ public class TestGameWindow : EditorWindow {
 	}
 
 	private void Update() {
+		Repaint();
+		
 		if (runningTestGame) {
 			coroutine.MoveNext();
 		}
-	}
-
-	// Allows window to update even when outside of focus.
-	private void OnInspectorUpdate() {
-		Repaint();
 	}
 
 	private void OnGUI() {
@@ -263,7 +249,6 @@ public class TestGameWindow : EditorWindow {
 			changeTurnRequest.Raise();
 			currentNode = currentNode.Next;
 
-			double moveDelay = 0.5;
 			double currentTime = EditorApplication.timeSinceStartup;
 			double endTime = currentTime + moveDelay;
 			while (Math.Abs(endTime - currentTime) > 0.01) {
