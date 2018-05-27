@@ -10,7 +10,7 @@ public class GameController : MonoBehaviour {
 
 	[HideInInspector] public bool InGame = false;
 	
-	[SerializeField] private TicTacToeBoard runningBoard;
+	public TicTacToeBoard RunningBoard;
 	[SerializeField] private GameEvent gameStartedEvent, turnChangedEvent, displayGameOverPanelRequest, resetRunningGameUIRequest;
 	[SerializeField] private GameSettings settings;
 	[SerializeField] private ToggleGroup player1PieceToggleGroup, player2PieceToggleGroup, gameModeToggleGroup;
@@ -31,8 +31,8 @@ public class GameController : MonoBehaviour {
 		settings.TilesPerSide.SetValue(gameModeToggleGroup.ActiveToggles().First().GetComponent<GameModeBinding>().TilesPerSide);
 		
 		// Initialize the starting board, and add its snapshot to the history of boards
-		runningBoard.InitializeBoard(settings.TilesPerSide);
-		boardsLinkedList.AddFirst(TicTacToeBoard.SnapshotBoard(runningBoard));
+		RunningBoard.InitializeBoard(settings.TilesPerSide);
+		boardsLinkedList.AddFirst(TicTacToeBoard.SnapshotBoard(RunningBoard));
 		
 		//raise event for other scripts to respond
 		gameStartedEvent.Raise();
@@ -43,12 +43,12 @@ public class GameController : MonoBehaviour {
 	// adds current board to history, and changes players' turns
 	// checks current board in case the game is over;
 	public void ChangeTurn() {
-		boardsLinkedList.AddLast(TicTacToeBoard.SnapshotBoard(runningBoard));
+		boardsLinkedList.AddLast(TicTacToeBoard.SnapshotBoard(RunningBoard));
 		currentTurn.Toggle();
 		turnCount++;
 		
 		GameOverState gameOverState;
-		if (runningBoard.MeetsEndCondition(out gameOverState)) EndGame(gameOverState); 
+		if (RunningBoard.MeetsEndCondition(out gameOverState)) EndGame(gameOverState); 
 		else turnChangedEvent.Raise();
 	}
 
@@ -76,10 +76,10 @@ public class GameController : MonoBehaviour {
 		turnCount = 0;
 		currentTurn.Player = Player.One;
 		
-		runningBoard.ResetBoard();
+		RunningBoard.ResetBoard();
 		
 		boardsLinkedList.Clear();
-		boardsLinkedList.AddFirst(TicTacToeBoard.SnapshotBoard(runningBoard));
+		boardsLinkedList.AddFirst(TicTacToeBoard.SnapshotBoard(RunningBoard));
 		
 		InGame = true;
 		resetRunningGameUIRequest.Raise();

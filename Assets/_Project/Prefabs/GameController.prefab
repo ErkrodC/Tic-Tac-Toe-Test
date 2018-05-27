@@ -1758,7 +1758,7 @@ MonoBehaviour:
   m_ChildAlignment: 0
   m_StartCorner: 0
   m_StartAxis: 0
-  m_CellSize: {x: 169.04826, y: 167.85336}
+  m_CellSize: {x: 169.04823, y: 167.88603}
   m_Spacing: {x: -5, y: -5}
   m_Constraint: 0
   m_ConstraintCount: 2
@@ -2204,7 +2204,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b5ec60a66cb6b2145be4107cd264b5b1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  runningBoard: {fileID: 11400000, guid: 05dbe82f8f1ce8d46b603e30576b19cd, type: 2}
+  InGame: 0
+  RunningBoard: {fileID: 11400000, guid: 05dbe82f8f1ce8d46b603e30576b19cd, type: 2}
   gameStartedEvent: {fileID: 11400000, guid: 36db869f69807114db6ac900ea7029e2, type: 2}
   turnChangedEvent: {fileID: 11400000, guid: 9fbd69fb96a078c43b5252a6f24293ad, type: 2}
   displayGameOverPanelRequest: {fileID: 11400000, guid: a4da960eaab2e2a4a890d1c461ea2bfa,
@@ -4603,7 +4604,7 @@ MonoBehaviour:
   m_outlineColor:
     serializedVersion: 2
     rgba: 4278190080
-  m_fontSize: 252.9
+  m_fontSize: 252.95
   m_fontSizeBase: 36
   m_fontWeight: 400
   m_enableAutoSizing: 1

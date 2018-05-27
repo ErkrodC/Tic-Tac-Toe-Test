@@ -40,7 +40,7 @@ public class TileController : MonoBehaviour {
 		IsOccupied = false;
 	}
 
-	private void SetPieceImage(Sprite sprite) {
+	public void SetPieceImage(Sprite sprite) {
 		pieceImageComponent.sprite = sprite;
 		pieceImageComponent.enabled = true;
 	}

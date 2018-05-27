@@ -5,7 +5,11 @@ licenseType: Free
 MonoImporter:
   externalObjects: {}
   serializedVersion: 2
-  defaultReferences: []
+  defaultReferences:
+  - m_PersistentViewDataDictionary: {instanceID: 0}
+  - settings: {instanceID: 0}
+  - runningBoard: {instanceID: 0}
+  - changeTurnRequest: {instanceID: 0}
   executionOrder: 0
   icon: {instanceID: 0}
   userData: 
