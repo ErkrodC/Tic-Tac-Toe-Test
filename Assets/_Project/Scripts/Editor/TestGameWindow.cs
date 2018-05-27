@@ -1,8 +1,11 @@
-﻿using UnityEngine;
+﻿using System;
+using System.Collections;
+using UnityEngine;
 using UnityEditor;
 using System.Linq;
 using System.Collections.Generic;
 using MoveHistory = System.Collections.Generic.LinkedList<TicTacToeBoard>;
+using Random = UnityEngine.Random;
 
 public class TestGameWindow : EditorWindow {
 	
@@ -22,11 +25,19 @@ public class TestGameWindow : EditorWindow {
 	[SerializeField] private TicTacToeBoard runningBoard;
 	[SerializeField] private GameEvent changeTurnRequest;
 	private GameController gameController;
+	private bool runningTestGame = false;
+	private IEnumerator coroutine;
 
 	[MenuItem("Debug/Play Test TTT Game")]
 	public static void OpenWindow() {
 		TestGameWindow window = GetWindow<TestGameWindow>("Test TTT Game");
 		window.minSize = new Vector2(600, 480);
+	}
+
+	private void Update() {
+		if (runningTestGame) {
+			coroutine.MoveNext();
+		}
 	}
 
 	// Allows window to update even when outside of focus.
@@ -43,7 +54,7 @@ public class TestGameWindow : EditorWindow {
 			changeTurnRequest = AssetDatabase.LoadAssetAtPath<GameEvent>(AssetDatabase.GUIDToAssetPath(AssetDatabase.FindAssets($"ChangeTurnRequest")[0]));
 		}
 		
-		if (Application.isPlaying && gameController.InGame) {
+		if (Application.isPlaying && gameController.InGame && !runningTestGame) {
 			MoveHistory generatedGame;
 		
 			GUILayout.Label("Select desired winning line.");
@@ -54,7 +65,9 @@ public class TestGameWindow : EditorWindow {
 				if (GUILayout.Button($"Row {i + 1}")) {
 					DesiredEndGame desiredEndGame = new DesiredEndGame(GameEndType.Row, i);
 					generatedGame = GenerateFullGame(desiredEndGame);
-					RunTestGame(generatedGame);
+					runningTestGame = true;
+					coroutine = RunTestGame(generatedGame);
+					//this.StartCoroutine(RunTestGame(generatedGame));
 				}
 			}
 
@@ -63,7 +76,9 @@ public class TestGameWindow : EditorWindow {
 				if (GUILayout.Button($"Column {i + 1}")) {
 					DesiredEndGame desiredEndGame = new DesiredEndGame(GameEndType.Column, i);
 					generatedGame = GenerateFullGame(desiredEndGame);
-					RunTestGame(generatedGame);
+					runningTestGame = true;
+					coroutine = RunTestGame(generatedGame);
+					//this.StartCoroutine(RunTestGame(generatedGame));
 				}
 			}
 
@@ -73,9 +88,15 @@ public class TestGameWindow : EditorWindow {
 				if (GUILayout.Button(buttonText)) {
 					DesiredEndGame desiredEndGame = new DesiredEndGame(GameEndType.Diagonal, i);
 					generatedGame = GenerateFullGame(desiredEndGame);
-					RunTestGame(generatedGame);
+					runningTestGame = true;
+					coroutine = RunTestGame(generatedGame);
+					//this.StartCoroutine(RunTestGame(generatedGame));
 				}
 			}
+		} else if (runningTestGame) {
+			GUILayout.Label("Test game running...");
+		} else if (!Application.isPlaying) {
+			GUILayout.Label("Editor must be in play mode in order to test.");
 		} else {
 			GUILayout.Label("Game must be started in order to test.");
 		}
@@ -132,7 +153,7 @@ public class TestGameWindow : EditorWindow {
 
 					// set a random square in desired column to winning player piece
 					int randomRow = emptyTileRowIndices[Random.Range(0, emptyTileRowIndices.Count)];
-					proceedingBoard.SetTile(desiredEndGame.Index, randomRow, settings.Player1Piece);
+					proceedingBoard.SetTile(randomRow, desiredEndGame.Index, settings.Player1Piece);
 					break;
 				case GameEndType.Diagonal:
 					int rowIndex, columnIndex;
@@ -218,13 +239,14 @@ public class TestGameWindow : EditorWindow {
 	}
 
 	// TODO use Move struct to make code more efficient
-	private void RunTestGame(MoveHistory generatedGame) {
+	private IEnumerator RunTestGame(MoveHistory generatedGame) {
 		BoardController boardController = FindObjectOfType<BoardController>();
 		List<TileController> tiles = boardController.TileControllerList;
 		
 		LinkedListNode<TicTacToeBoard> currentNode = generatedGame.First;
 		while (currentNode != null) {
 			runningBoard.Matrix = currentNode.Value.Matrix;
+			
 			
 			// clear visual board, then redraw pieces
 			for (int row = 0; row < settings.TilesPerSide; row++) {
@@ -238,6 +260,16 @@ public class TestGameWindow : EditorWindow {
 			
 			changeTurnRequest.Raise();
 			currentNode = currentNode.Next;
+
+			double moveDelay = 0.5;
+			double currentTime = EditorApplication.timeSinceStartup;
+			double endTime = currentTime + moveDelay;
+			while (Math.Abs(endTime - currentTime) > 0.01) {
+				yield return null;
+				currentTime = EditorApplication.timeSinceStartup;
+			}
 		}
+
+		runningTestGame = false;
 	}
 }
