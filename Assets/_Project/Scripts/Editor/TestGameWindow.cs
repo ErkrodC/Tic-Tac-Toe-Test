@@ -243,6 +243,8 @@ public class TestGameWindow : EditorWindow {
 		BoardController boardController = FindObjectOfType<BoardController>();
 		List<TileController> tiles = boardController.TileControllerList;
 		
+		boardController.ResetBoard();
+		
 		LinkedListNode<TicTacToeBoard> currentNode = generatedGame.First;
 		while (currentNode != null) {
 			runningBoard.Matrix = currentNode.Value.Matrix;
