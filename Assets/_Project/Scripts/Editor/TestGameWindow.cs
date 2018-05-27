@@ -1,26 +1,32 @@
-﻿using System;
-using System.Collections;
+﻿using System.Collections;
 using UnityEngine;
 using UnityEditor;
 using System.Linq;
 using System.Collections.Generic;
 using MoveHistory = System.Collections.Generic.LinkedList<TicTacToeBoard>;
 using Random = UnityEngine.Random;
+using static UnityEditor.AssetDatabase;
 
 public class TestGameWindow : EditorWindow {
 	
-	[SerializeField] private GameSettings settings;
-	[SerializeField] private TicTacToeBoard runningBoard;
-	[SerializeField] private GameEvent changeTurnRequest;
+	private GameSettings settings;
+	private TicTacToeBoard runningBoard;
+	private GameEvent changeTurnRequest;
 	private GameController gameController;
 	private bool runningTestGame = false;
 	private IEnumerator coroutine;
-	double moveDelay = 0.5;
+	private float moveDelayThreshold = 0.1f;
 
 	[MenuItem("Debug/Play Test TTT Game")]
 	public static void OpenWindow() {
 		TestGameWindow window = GetWindow<TestGameWindow>("Test TTT Game");
 		window.minSize = new Vector2(600, 480);
+	}
+
+	private void OnEnable() {
+		runningBoard = LoadAssetAtPath<TicTacToeBoard>(GUIDToAssetPath(FindAssets("RunningBoard")[0]));
+		settings = LoadAssetAtPath<GameSettings>(GUIDToAssetPath(FindAssets("GlobalGameSettings")[0]));
+		changeTurnRequest = LoadAssetAtPath<GameEvent>(GUIDToAssetPath(FindAssets($"ChangeTurnRequest")[0]));
 	}
 
 	private void Update() {
@@ -35,12 +41,15 @@ public class TestGameWindow : EditorWindow {
 		// NOTE Hard reference to GameController is desirable in this case since no game controller means no possibility to test a game.
 		if (gameController == null) {
 			gameController = GameObject.FindGameObjectWithTag("GameController").GetComponent<GameController>();
-			runningBoard = AssetDatabase.LoadAssetAtPath<TicTacToeBoard>(AssetDatabase.GUIDToAssetPath(AssetDatabase.FindAssets("RunningBoard")[0]));
-			settings = AssetDatabase.LoadAssetAtPath<GameSettings>(AssetDatabase.GUIDToAssetPath(AssetDatabase.FindAssets("GlobalGameSettings")[0]));
-			changeTurnRequest = AssetDatabase.LoadAssetAtPath<GameEvent>(AssetDatabase.GUIDToAssetPath(AssetDatabase.FindAssets($"ChangeTurnRequest")[0]));
 		}
-		
-		if (Application.isPlaying && gameController.InGame && !runningTestGame) {
+
+		if (!Application.isPlaying) {
+			GUILayout.Label("Editor must be in play mode in order to test.");
+		} else if (!gameController.InGame){
+			GUILayout.Label("Game must be started in order to test.");
+		} else if (runningTestGame) {
+			GUILayout.Label("Test game running...");
+		} else {
 			MoveHistory generatedGame;
 		
 			GUILayout.Label("Select desired winning line.");
@@ -79,12 +88,6 @@ public class TestGameWindow : EditorWindow {
 					//this.StartCoroutine(RunTestGame(generatedGame));
 				}
 			}
-		} else if (runningTestGame) {
-			GUILayout.Label("Test game running...");
-		} else if (!Application.isPlaying) {
-			GUILayout.Label("Editor must be in play mode in order to test.");
-		} else {
-			GUILayout.Label("Game must be started in order to test.");
 		}
 	}
 
@@ -115,80 +118,45 @@ public class TestGameWindow : EditorWindow {
 	// Takes in a DesiredEndGame to handle playing on tiles reserved for win condition.
 	private TicTacToeBoard GenerateRandomProceedingBoard(TicTacToeBoard board, DesiredEndGame desiredEndGame, CurrentTurn currentTurn) {
 		TicTacToeBoard proceedingBoard = TicTacToeBoard.SnapshotBoard(board);
-
+		List<TileCoord> availableTiles = new List<TileCoord>();
+		TileCoord randomTile;
+		
 		// Winning player turn.
 		if (currentTurn.Player == Player.One) {
 			switch (desiredEndGame.GameEndType) {
 				case GameEndType.Row:
-					// gather available empty tiles
-					List<int> emptyTileColumnIndices = new List<int>();
+					// gather available empty row tiles
 					for (int column = 0; column < settings.TilesPerSide; column++) {
-						if (board.Matrix[desiredEndGame.Index][column] == null) emptyTileColumnIndices.Add(column);
+						if (board.Matrix[desiredEndGame.Index][column] == null) availableTiles.Add(new TileCoord(desiredEndGame.Index, column));
 					}
-
-					// set a random square in desired row to winning player piece
-					int randomColumn = emptyTileColumnIndices[Random.Range(0, emptyTileColumnIndices.Count)];
-					proceedingBoard.SetTile(desiredEndGame.Index, randomColumn, settings.Player1Piece);
 					break;
 				case GameEndType.Column:
-					// gather available empty tiles
-					List<int> emptyTileRowIndices = new List<int>();
+					// gather available empty column tiles
 					for (int row = 0; row < settings.TilesPerSide; row++) {
-						if (board.Matrix[row][desiredEndGame.Index] == null) emptyTileRowIndices.Add(row);
+						if (board.Matrix[row][desiredEndGame.Index] == null) availableTiles.Add(new TileCoord(row, desiredEndGame.Index));
 					}
-
-					// set a random square in desired column to winning player piece
-					int randomRow = emptyTileRowIndices[Random.Range(0, emptyTileRowIndices.Count)];
-					proceedingBoard.SetTile(randomRow, desiredEndGame.Index, settings.Player1Piece);
 					break;
 				case GameEndType.Diagonal:
-					int rowIndex, columnIndex;
-					bool topLeftBottomRightDiagChosen = desiredEndGame.Index == 0;
-					List<int> emptyTileDiagonalIndices = new List<int>();
-					
-					// gather available empty tiles 
+					// gather available empty diagonal tiles 
 					for (int diagIndex = 0; diagIndex < settings.TilesPerSide; diagIndex++) {
-						rowIndex = diagIndex;
-						columnIndex = topLeftBottomRightDiagChosen ? diagIndex : (settings.TilesPerSide - 1) - diagIndex; // handle both diagonals
-
-						if (board.Matrix[rowIndex][columnIndex] == null) emptyTileDiagonalIndices.Add(diagIndex);
+						int rowIndex = diagIndex;
+						int columnIndex = desiredEndGame.Index == 0 ? diagIndex : (settings.TilesPerSide - 1) - diagIndex; // handle both diagonals
+						if (board.Matrix[rowIndex][columnIndex] == null) availableTiles.Add(new TileCoord(rowIndex, columnIndex));
 					}
-					
-					// set a random square in desired diagonal to winning player piece
-					int randomDiagIndex = emptyTileDiagonalIndices[Random.Range(0, emptyTileDiagonalIndices.Count)];
-
-					rowIndex = randomDiagIndex;
-					columnIndex = topLeftBottomRightDiagChosen ? randomDiagIndex : (settings.TilesPerSide - 1) - randomDiagIndex; // handle both diagonals
-					proceedingBoard.SetTile(rowIndex, columnIndex, settings.Player1Piece);
 					break;
 			}
 		} else {	// Losing player turn.
-			List<int> availableRowIndices, availableColumnIndices;
-			List<TileCoord> availableTiles;
-			
 			switch (desiredEndGame.GameEndType) {
 				case GameEndType.Row:
-					availableRowIndices = Enumerable.Range(0, settings.TilesPerSide).Where(index => index != desiredEndGame.Index).ToList();
-					availableColumnIndices = Enumerable.Range(0, settings.TilesPerSide).ToList();
-
-					availableTiles = new List<TileCoord>();
-					foreach (int availableRowIndex in availableRowIndices) {
-						foreach (int availableColumnIndex in availableColumnIndices) {
-							if (board.Matrix[availableRowIndex][availableColumnIndex] == null) {
-								availableTiles.Add(new TileCoord(availableRowIndex, availableColumnIndex));
-							}
-						}
-					}
-
-					TileCoord randomTile = availableTiles[Random.Range(0, availableTiles.Count)];
-					proceedingBoard.SetTile(randomTile.Row, randomTile.Column, settings.Player2Piece);
-
-					break;
 				case GameEndType.Column:
-					availableRowIndices = Enumerable.Range(0, settings.TilesPerSide).ToList();
-					availableColumnIndices = Enumerable.Range(0, settings.TilesPerSide).Where(index => index != desiredEndGame.Index).ToList();
+					// Losing player cannot play on line that is reserved for game win, therefore substract its index from available rows or columns depending on desired GameEndType.
+					List<int> availableRowIndices = desiredEndGame.GameEndType == GameEndType.Row ?
+						                                Enumerable.Range(0, settings.TilesPerSide).Where(index => index != desiredEndGame.Index).ToList() :
+						                                Enumerable.Range(0, settings.TilesPerSide).ToList();
+					List<int> availableColumnIndices = desiredEndGame.GameEndType == GameEndType.Row ?
+						                                   Enumerable.Range(0, settings.TilesPerSide).ToList() :
+						                                   Enumerable.Range(0, settings.TilesPerSide).Where(index => index != desiredEndGame.Index).ToList();
 					
-					availableTiles = new List<TileCoord>();
 					foreach (int availableRowIndex in availableRowIndices) {
 						foreach (int availableColumnIndex in availableColumnIndices) {
 							if (board.Matrix[availableRowIndex][availableColumnIndex] == null) {
@@ -196,14 +164,8 @@ public class TestGameWindow : EditorWindow {
 							}
 						}
 					}
-					
-					randomTile = availableTiles[Random.Range(0, availableTiles.Count)];
-					proceedingBoard.SetTile(randomTile.Row, randomTile.Column, settings.Player2Piece);
-					
 					break;
 				case GameEndType.Diagonal:
-					availableTiles = new List<TileCoord>();
-
 					for (int row = 0; row < settings.TilesPerSide; row++) {
 						for (int column = 0; column < settings.TilesPerSide; column++) {
 							bool tileCoordIsOnDiagonal = desiredEndGame.Index == 0 ? column == row : column == (settings.TilesPerSide - 1) - row;
@@ -213,14 +175,13 @@ public class TestGameWindow : EditorWindow {
 							}
 						}
 					}
-					
-					randomTile = availableTiles[Random.Range(0, availableTiles.Count)];
-					proceedingBoard.SetTile(randomTile.Row, randomTile.Column, settings.Player2Piece);
-					
 					break;
 			}
 		}
 
+		// set a random (and appropriate) tile to currentTurn's player piece
+		randomTile = availableTiles[Random.Range(0, availableTiles.Count)];
+		proceedingBoard.SetTile(randomTile.Row, randomTile.Column, currentTurn.Player == Player.One ? settings.Player1Piece : settings.Player2Piece);
 		return proceedingBoard;
 	}
 
@@ -235,7 +196,6 @@ public class TestGameWindow : EditorWindow {
 		while (currentNode != null) {
 			runningBoard.Matrix = currentNode.Value.Matrix;
 			
-			
 			// clear visual board, then redraw pieces
 			for (int row = 0; row < settings.TilesPerSide; row++) {
 				for (int column = 0; column < settings.TilesPerSide; column++) {
@@ -249,11 +209,10 @@ public class TestGameWindow : EditorWindow {
 			changeTurnRequest.Raise();
 			currentNode = currentNode.Next;
 
-			double currentTime = EditorApplication.timeSinceStartup;
-			double endTime = currentTime + moveDelay;
-			while (Math.Abs(endTime - currentTime) > 0.01) {
+			// NOTE yield waitforsecs doesn't seem to work correctly
+			double endTime = EditorApplication.timeSinceStartup + moveDelayThreshold;
+			while (EditorApplication.timeSinceStartup < endTime) {
 				yield return null;
-				currentTime = EditorApplication.timeSinceStartup;
 			}
 		}
 
