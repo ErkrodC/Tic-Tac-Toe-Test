@@ -930,7 +930,7 @@ GameObject:
   - component: {fileID: 114332885133770782}
   m_Layer: 0
   m_Name: GameController
-  m_TagString: Untagged
+  m_TagString: GameController
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -2204,7 +2204,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b5ec60a66cb6b2145be4107cd264b5b1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  runningBoard: {fileID: 11400000, guid: 05dbe82f8f1ce8d46b603e30576b19cd, type: 2}
+  InGame: 0
+  RunningBoard: {fileID: 11400000, guid: 05dbe82f8f1ce8d46b603e30576b19cd, type: 2}
   gameStartedEvent: {fileID: 11400000, guid: 36db869f69807114db6ac900ea7029e2, type: 2}
   turnChangedEvent: {fileID: 11400000, guid: 9fbd69fb96a078c43b5252a6f24293ad, type: 2}
   displayGameOverPanelRequest: {fileID: 11400000, guid: a4da960eaab2e2a4a890d1c461ea2bfa,
@@ -2495,7 +2496,7 @@ MonoBehaviour:
   m_firstVisibleCharacter: 0
   m_useMaxVisibleDescender: 1
   m_pageToDisplay: 1
-  m_margin: {x: 0, y: 0, z: 0, w: 0}
+  m_margin: {x: 0, y: 0, z: 13.976089, w: 0}
   m_textInfo:
     textComponent: {fileID: 114338147671138558}
     characterCount: 31
@@ -5213,10 +5214,10 @@ RectTransform:
   m_Father: {fileID: 224109755355655348}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -627.4, y: -139.31}
-  m_SizeDelta: {x: 523.4, y: 120}
+  m_AnchorMin: {x: 0.038317923, y: 0.31550524}
+  m_AnchorMax: {x: 0.3084375, y: 0.42800003}
+  m_AnchoredPosition: {x: 1.5999756, y: -0.30999756}
+  m_SizeDelta: {x: 3.4000244, y: -2}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!224 &224040208618194706
 RectTransform:
@@ -5483,10 +5484,10 @@ RectTransform:
   m_Father: {fileID: 224109755355655348}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -627.4, y: -337.1}
-  m_SizeDelta: {x: 523.4, y: 120}
+  m_AnchorMin: {x: 0.038317923, y: 0.13514867}
+  m_AnchorMax: {x: 0.3084375, y: 0.24349478}
+  m_AnchoredPosition: {x: 1.0999756, y: -0.5999756}
+  m_SizeDelta: {x: 2.4000244, y: 3}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!224 &224326963500079562
 RectTransform:

@@ -12,4 +12,4 @@ MonoBehaviour:
   m_Name: RunningBoard
   m_EditorClassIdentifier: 
   TilesPerSide: 3
-  settings: {fileID: 11400000, guid: 476acd98f06fd3e44bd9d8c1d94550bd, type: 2}
+  Settings: {fileID: 11400000, guid: 476acd98f06fd3e44bd9d8c1d94550bd, type: 2}

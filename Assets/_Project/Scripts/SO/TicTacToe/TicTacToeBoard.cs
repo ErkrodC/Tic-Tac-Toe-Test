@@ -2,23 +2,22 @@
 using UnityEngine;
 
 public class TicTacToeBoard : ScriptableObject {
-
+	// TODO refactor to accomodate public Settings variable (i.e. modify SnapShotBoard and InitializeBoard to handle that variable and others more effectively
+	
 	public int TilesPerSide;
 	public List<List<TicTacToePiece>> Matrix;
-
-	[SerializeField] private GameSettings settings;
+	public GameSettings Settings;
 
 	// Returns a copy of the passed board
 	public static TicTacToeBoard SnapshotBoard(TicTacToeBoard boardToCopy) {
 		TicTacToeBoard board = CreateInstance<TicTacToeBoard>();
 		board.InitializeBoard(boardToCopy.TilesPerSide);
 		board.TilesPerSide = boardToCopy.TilesPerSide;
+		board.Settings = boardToCopy.Settings;
 		
 		for (int i = 0; i < board.TilesPerSide; i++) {
-			board.Matrix.Add(new List<TicTacToePiece>());
-			
 			for (int j = 0; j < board.TilesPerSide; j++) {
-				board.Matrix[i].Add(boardToCopy.Matrix[i][j]);
+				board.Matrix[i][j] = boardToCopy.Matrix[i][j];
 			}
 		}
 
@@ -79,7 +78,7 @@ public class TicTacToeBoard : ScriptableObject {
 				}
 				
 				if (column == TilesPerSide - 1) { // full row found
-					gameOverState = pieceToMatch == settings.Player1Piece ? GameOverState.Player1Wins : GameOverState.Player2Wins;
+					gameOverState = pieceToMatch == Settings.Player1Piece ? GameOverState.Player1Wins : GameOverState.Player2Wins;
 					return true;
 				}
 			}
@@ -95,7 +94,7 @@ public class TicTacToeBoard : ScriptableObject {
 				}
 				
 				if (row == TilesPerSide - 1) { // full column found
-					gameOverState = pieceToMatch == settings.Player1Piece ? GameOverState.Player1Wins : GameOverState.Player2Wins;
+					gameOverState = pieceToMatch == Settings.Player1Piece ? GameOverState.Player1Wins : GameOverState.Player2Wins;
 					return true;
 				}
 			}
@@ -114,7 +113,7 @@ public class TicTacToeBoard : ScriptableObject {
 					}
 				
 					if (i == TilesPerSide - 1) { // full column found
-						gameOverState = pieceToMatch == settings.Player1Piece ? GameOverState.Player1Wins : GameOverState.Player2Wins;
+						gameOverState = pieceToMatch == Settings.Player1Piece ? GameOverState.Player1Wins : GameOverState.Player2Wins;
 						return true;
 					}
 
@@ -134,7 +133,7 @@ public class TicTacToeBoard : ScriptableObject {
 					}
 				
 					if (i == TilesPerSide - 1) { // full column found
-						gameOverState = pieceToMatch == settings.Player1Piece ? GameOverState.Player1Wins : GameOverState.Player2Wins;
+						gameOverState = pieceToMatch == Settings.Player1Piece ? GameOverState.Player1Wins : GameOverState.Player2Wins;
 						return true;
 					}
 
