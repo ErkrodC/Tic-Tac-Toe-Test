@@ -51,33 +51,41 @@ public class TestGameWindow : EditorWindow {
 			GUILayout.Label("Test game running...");
 		} else {	
 			GUILayout.Label("Select desired winning line.");
-			
-			// TODO use beginHorizontal for the different game end types
-			// Generate row buttons.
-			for (int i = 0; i < settings.TilesPerSide; i++) {
-				if (GUILayout.Button($"Row {i + 1}")) {
-					runningTestGame = true;
-					coroutine = RunTestGame(GenerateFullGame(new DesiredEndGame(GameEndType.Row, i)));
-				}
-			}
 
-			// Generate column buttons.
-			for (int i = 0; i < settings.TilesPerSide; i++) {
-				if (GUILayout.Button($"Column {i + 1}")) {
-					runningTestGame = true;
-					coroutine = RunTestGame(GenerateFullGame(new DesiredEndGame(GameEndType.Column, i)));
+			EditorGUILayout.BeginHorizontal();
+			{
+				// Generate row buttons.
+				for (int i = 0; i < settings.TilesPerSide; i++) {
+					if (GUILayout.Button($"Row {i + 1}")) {
+						runningTestGame = true;
+						coroutine = RunTestGame(GenerateFullGame(new DesiredEndGame(GameEndType.Row, i)));
+					}
 				}
-			}
+			} EditorGUILayout.EndHorizontal();
 
-			// Generate diagonal buttons.
-			for (int i = 0; i < 2; i++) {
-				string buttonText = i == 0 ? "\\ Diagonal" : "/ Diagonal";
-				if (GUILayout.Button(buttonText)) {
-					runningTestGame = true;
-					coroutine = RunTestGame(GenerateFullGame(new DesiredEndGame(GameEndType.Diagonal, i)));
+			EditorGUILayout.BeginHorizontal();
+			{
+				// Generate column buttons.
+				for (int i = 0; i < settings.TilesPerSide; i++) {
+					if (GUILayout.Button($"Column {i + 1}")) {
+						runningTestGame = true;
+						coroutine = RunTestGame(GenerateFullGame(new DesiredEndGame(GameEndType.Column, i)));
+					}
 				}
-			}
-			
+			} EditorGUILayout.EndHorizontal();
+
+			EditorGUILayout.BeginHorizontal();
+			{
+				// Generate diagonal buttons.
+				for (int i = 0; i < 2; i++) {
+					string buttonText = i == 0 ? "\\ Diagonal" : "/ Diagonal";
+					if (GUILayout.Button(buttonText)) {
+						runningTestGame = true;
+						coroutine = RunTestGame(GenerateFullGame(new DesiredEndGame(GameEndType.Diagonal, i)));
+					}
+				}
+			} EditorGUILayout.EndHorizontal();
+
 			if (GUILayout.Button("Draw")) {
 				runningTestGame = true;
 				coroutine = RunTestGame(GenerateFullGame(new DesiredEndGame(GameEndType.Draw, -1)));
@@ -227,7 +235,7 @@ public class TestGameWindow : EditorWindow {
 		}
 	}
 
-	// TODO use Move struct to make code more efficient
+	// Handles drawing board and raising changeTurnRequest to progress game flow.
 	private IEnumerator RunTestGame(MoveHistory generatedGame) {
 		BoardController boardController = FindObjectOfType<BoardController>();
 		List<TileController> tiles = boardController.TileControllerList;
