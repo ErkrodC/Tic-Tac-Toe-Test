@@ -8,14 +8,14 @@ using Random = UnityEngine.Random;
 using static UnityEditor.AssetDatabase;
 
 public class TestGameWindow : EditorWindow {
-	
-	private GameSettings settings;
-	private TicTacToeBoard runningBoard;
-	private GameEvent changeTurnRequest;
-	private GameController gameController;
-	private bool runningTestGame = false;
-	private IEnumerator coroutine;
+
+	private bool runningTestGame;
 	private float moveDelayThreshold = 0.1f;
+	private GameController gameController;
+	private GameEvent changeTurnRequest;
+	private GameSettings settings;
+	private IEnumerator coroutine;
+	private TicTacToeBoard runningBoard, drawnGameBoard;
 
 	[MenuItem("Debug/Play Test TTT Game")]
 	public static void OpenWindow() {
@@ -49,31 +49,23 @@ public class TestGameWindow : EditorWindow {
 			GUILayout.Label("Game must be started in order to test.");
 		} else if (runningTestGame) {
 			GUILayout.Label("Test game running...");
-		} else {
-			MoveHistory generatedGame;
-		
+		} else {	
 			GUILayout.Label("Select desired winning line.");
 			
 			// TODO use beginHorizontal for the different game end types
 			// Generate row buttons.
 			for (int i = 0; i < settings.TilesPerSide; i++) {
 				if (GUILayout.Button($"Row {i + 1}")) {
-					DesiredEndGame desiredEndGame = new DesiredEndGame(GameEndType.Row, i);
-					generatedGame = GenerateFullGame(desiredEndGame);
 					runningTestGame = true;
-					coroutine = RunTestGame(generatedGame);
-					//this.StartCoroutine(RunTestGame(generatedGame));
+					coroutine = RunTestGame(GenerateFullGame(new DesiredEndGame(GameEndType.Row, i)));
 				}
 			}
 
 			// Generate column buttons.
 			for (int i = 0; i < settings.TilesPerSide; i++) {
 				if (GUILayout.Button($"Column {i + 1}")) {
-					DesiredEndGame desiredEndGame = new DesiredEndGame(GameEndType.Column, i);
-					generatedGame = GenerateFullGame(desiredEndGame);
 					runningTestGame = true;
-					coroutine = RunTestGame(generatedGame);
-					//this.StartCoroutine(RunTestGame(generatedGame));
+					coroutine = RunTestGame(GenerateFullGame(new DesiredEndGame(GameEndType.Column, i)));
 				}
 			}
 
@@ -81,12 +73,14 @@ public class TestGameWindow : EditorWindow {
 			for (int i = 0; i < 2; i++) {
 				string buttonText = i == 0 ? "\\ Diagonal" : "/ Diagonal";
 				if (GUILayout.Button(buttonText)) {
-					DesiredEndGame desiredEndGame = new DesiredEndGame(GameEndType.Diagonal, i);
-					generatedGame = GenerateFullGame(desiredEndGame);
 					runningTestGame = true;
-					coroutine = RunTestGame(generatedGame);
-					//this.StartCoroutine(RunTestGame(generatedGame));
+					coroutine = RunTestGame(GenerateFullGame(new DesiredEndGame(GameEndType.Diagonal, i)));
 				}
+			}
+			
+			if (GUILayout.Button("Draw")) {
+				runningTestGame = true;
+				coroutine = RunTestGame(GenerateFullGame(new DesiredEndGame(GameEndType.Draw, -1)));
 			}
 		}
 	}
@@ -144,12 +138,21 @@ public class TestGameWindow : EditorWindow {
 						if (board.Matrix[rowIndex][columnIndex] == null) availableTiles.Add(new TileCoord(rowIndex, columnIndex));
 					}
 					break;
+				case GameEndType.Draw:
+					if (drawnGameBoard == null) InitializeDrawnGameBoard();
+
+					for (int row = 0; row < settings.TilesPerSide; row++) {
+						for (int column = 0; column < settings.TilesPerSide; column++) {
+							if (drawnGameBoard.Matrix[row][column] == settings.Player1Piece && board.Matrix[row][column] == null) availableTiles.Add(new TileCoord(row, column));
+						}
+					}
+					break;
 			}
 		} else {	// Losing player turn.
 			switch (desiredEndGame.GameEndType) {
 				case GameEndType.Row:
 				case GameEndType.Column:
-					// Losing player cannot play on line that is reserved for game win, therefore substract its index from available rows or columns depending on desired GameEndType.
+					// Losing player cannot play on row/column that is reserved for game win, therefore substract its index from available rows or columns depending on desired GameEndType.
 					List<int> availableRowIndices = desiredEndGame.GameEndType == GameEndType.Row ?
 						                                Enumerable.Range(0, settings.TilesPerSide).Where(index => index != desiredEndGame.Index).ToList() :
 						                                Enumerable.Range(0, settings.TilesPerSide).ToList();
@@ -166,6 +169,7 @@ public class TestGameWindow : EditorWindow {
 					}
 					break;
 				case GameEndType.Diagonal:
+					// Gather empty tiles that are not on winning diagonal
 					for (int row = 0; row < settings.TilesPerSide; row++) {
 						for (int column = 0; column < settings.TilesPerSide; column++) {
 							bool tileCoordIsOnDiagonal = desiredEndGame.Index == 0 ? column == row : column == (settings.TilesPerSide - 1) - row;
@@ -176,6 +180,14 @@ public class TestGameWindow : EditorWindow {
 						}
 					}
 					break;
+				case GameEndType.Draw:
+					if (drawnGameBoard == null) InitializeDrawnGameBoard();
+					for (int row = 0; row < settings.TilesPerSide; row++) {
+						for (int column = 0; column < settings.TilesPerSide; column++) {
+							if (drawnGameBoard.Matrix[row][column] == settings.Player2Piece && board.Matrix[row][column] == null) availableTiles.Add(new TileCoord(row, column));
+						}
+					}
+					break;
 			}
 		}
 
@@ -183,6 +195,36 @@ public class TestGameWindow : EditorWindow {
 		randomTile = availableTiles[Random.Range(0, availableTiles.Count)];
 		proceedingBoard.SetTile(randomTile.Row, randomTile.Column, currentTurn.Player == Player.One ? settings.Player1Piece : settings.Player2Piece);
 		return proceedingBoard;
+	}
+
+	// Sets drawnGameBoard variable to a finished board that is a tied game.
+	private void InitializeDrawnGameBoard() {
+		drawnGameBoard = CreateInstance<TicTacToeBoard>();
+		drawnGameBoard.InitializeBoard(settings.TilesPerSide);
+		drawnGameBoard.Settings = settings;
+
+		for (int i = 0; i < settings.TilesPerSide * settings.TilesPerSide; i++) {
+			int row = i / settings.TilesPerSide,
+			    column = i % runningBoard.TilesPerSide;
+
+			drawnGameBoard.Matrix[row][column] = i % 2 == 0 ? settings.Player1Piece : settings.Player2Piece;
+		}
+
+		int randomRowIndex;
+		if (settings.TilesPerSide % 2 == 0) { // e.g. 4x4
+			// rotate right a single random row by 1 
+			randomRowIndex = Random.Range(0, settings.TilesPerSide);
+			List<TicTacToePiece> randomRow = drawnGameBoard.Matrix[randomRowIndex];
+			drawnGameBoard.Matrix[randomRowIndex] = randomRow.Skip(1).Concat(randomRow.Take(1)).ToList();
+
+		} else { // e.g. 3x3
+			// swap two adjacent rows
+			randomRowIndex = Random.Range(0, settings.TilesPerSide - 1);
+			List<TicTacToePiece> tempRow = drawnGameBoard.Matrix[randomRowIndex];
+
+			drawnGameBoard.Matrix[randomRowIndex] = drawnGameBoard.Matrix[randomRowIndex + 1];
+			drawnGameBoard.Matrix[randomRowIndex + 1] = tempRow;
+		}
 	}
 
 	// TODO use Move struct to make code more efficient
@@ -216,6 +258,7 @@ public class TestGameWindow : EditorWindow {
 			}
 		}
 
+		drawnGameBoard = null;
 		runningTestGame = false;
 	}
 }

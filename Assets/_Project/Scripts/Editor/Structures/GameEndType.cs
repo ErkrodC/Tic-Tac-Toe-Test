@@ -1,5 +1,6 @@
 ﻿public enum GameEndType {
 	Row,
 	Column,
-	Diagonal
+	Diagonal,
+	Draw
 }
