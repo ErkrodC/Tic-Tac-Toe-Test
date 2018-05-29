@@ -10,7 +10,7 @@ using static UnityEditor.AssetDatabase;
 public class TestGameWindow : EditorWindow {
 
 	private bool runningTestGame;
-	private float moveDelayThreshold = 0.1f;
+	private const float MoveDelayThreshold = 0.1f;
 	private GameController gameController;
 	private GameEvent changeTurnRequest;
 	private GameSettings settings;
@@ -26,7 +26,7 @@ public class TestGameWindow : EditorWindow {
 	private void OnEnable() {
 		runningBoard = LoadAssetAtPath<TicTacToeBoard>(GUIDToAssetPath(FindAssets("RunningBoard")[0]));
 		settings = LoadAssetAtPath<GameSettings>(GUIDToAssetPath(FindAssets("GlobalGameSettings")[0]));
-		changeTurnRequest = LoadAssetAtPath<GameEvent>(GUIDToAssetPath(FindAssets($"ChangeTurnRequest")[0]));
+		changeTurnRequest = LoadAssetAtPath<GameEvent>(GUIDToAssetPath(FindAssets("ChangeTurnRequest")[0]));
 	}
 
 	private void Update() {
@@ -121,8 +121,7 @@ public class TestGameWindow : EditorWindow {
 	private TicTacToeBoard GenerateRandomProceedingBoard(TicTacToeBoard board, DesiredEndGame desiredEndGame, CurrentTurn currentTurn) {
 		TicTacToeBoard proceedingBoard = TicTacToeBoard.SnapshotBoard(board);
 		List<TileCoord> availableTiles = new List<TileCoord>();
-		TileCoord randomTile;
-		
+
 		// Winning player turn.
 		if (currentTurn.Player == Player.One) {
 			switch (desiredEndGame.GameEndType) {
@@ -200,7 +199,7 @@ public class TestGameWindow : EditorWindow {
 		}
 
 		// set a random (and appropriate) tile to currentTurn's player piece
-		randomTile = availableTiles[Random.Range(0, availableTiles.Count)];
+		TileCoord randomTile = availableTiles[Random.Range(0, availableTiles.Count)];
 		proceedingBoard.SetTile(randomTile.Row, randomTile.Column, currentTurn.Player == Player.One ? settings.Player1Piece : settings.Player2Piece);
 		return proceedingBoard;
 	}
@@ -260,7 +259,7 @@ public class TestGameWindow : EditorWindow {
 			currentNode = currentNode.Next;
 
 			// NOTE yield waitforsecs doesn't seem to work correctly
-			double endTime = EditorApplication.timeSinceStartup + moveDelayThreshold;
+			double endTime = EditorApplication.timeSinceStartup + MoveDelayThreshold;
 			while (EditorApplication.timeSinceStartup < endTime) {
 				yield return null;
 			}
