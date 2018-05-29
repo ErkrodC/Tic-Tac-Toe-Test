@@ -119,7 +119,6 @@ public class TestGameWindow : EditorWindow {
 	// Generates a random proceeding board that is one move ahead of the passed board.
 	// Takes in a DesiredEndGame to handle playing on tiles reserved for win condition.
 	private TicTacToeBoard GenerateRandomProceedingBoard(TicTacToeBoard board, DesiredEndGame desiredEndGame, CurrentTurn currentTurn) {
-		TicTacToeBoard proceedingBoard = TicTacToeBoard.SnapshotBoard(board);
 		List<TileCoord> availableTiles = new List<TileCoord>();
 
 		// Winning player turn.
@@ -181,7 +180,7 @@ public class TestGameWindow : EditorWindow {
 						for (int column = 0; column < settings.TilesPerSide; column++) {
 							bool tileCoordIsOnDiagonal = desiredEndGame.Index == 0 ? column == row : column == (settings.TilesPerSide - 1) - row;
 							
-							if (proceedingBoard.Matrix[row][column] == null && !tileCoordIsOnDiagonal) {
+							if (board.Matrix[row][column] == null && !tileCoordIsOnDiagonal) {
 								availableTiles.Add(new TileCoord(row, column));
 							}
 						}
@@ -200,6 +199,8 @@ public class TestGameWindow : EditorWindow {
 
 		// set a random (and appropriate) tile to currentTurn's player piece
 		TileCoord randomTile = availableTiles[Random.Range(0, availableTiles.Count)];
+		
+		TicTacToeBoard proceedingBoard = TicTacToeBoard.SnapshotBoard(board);
 		proceedingBoard.SetTile(randomTile.Row, randomTile.Column, currentTurn.Player == Player.One ? settings.Player1Piece : settings.Player2Piece);
 		return proceedingBoard;
 	}
