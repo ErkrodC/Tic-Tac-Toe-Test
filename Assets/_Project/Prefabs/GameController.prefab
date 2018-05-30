@@ -869,6 +869,7 @@ GameObject:
   - component: {fileID: 224185247075384372}
   - component: {fileID: 222048984802769742}
   - component: {fileID: 114410470314957394}
+  - component: {fileID: 95385272737757588}
   - component: {fileID: 114167888474380890}
   - component: {fileID: 114231454271605726}
   - component: {fileID: 114905704823169144}
@@ -1079,6 +1080,23 @@ Animator:
   m_Enabled: 1
   m_Avatar: {fileID: 0}
   m_Controller: {fileID: 9100000, guid: 244787a6266c0b345aab1c08ea009176, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+--- !u!95 &95385272737757588
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1836418350146120}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 36522e106716da5428be233a0d286dc8, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
@@ -1547,6 +1565,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4cadca816fdc4a646aacee9b1b80e82b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  tileControllers: {fileID: 11400000, guid: 23b968bad624135409b96c525bb8b85d, type: 2}
   runningBoard: {fileID: 11400000, guid: 05dbe82f8f1ce8d46b603e30576b19cd, type: 2}
   settings: {fileID: 11400000, guid: 476acd98f06fd3e44bd9d8c1d94550bd, type: 2}
   tilePrefab: {fileID: 1915275118124152, guid: f21085a7f76f79440accb5040f6bb06e, type: 2}
@@ -1758,7 +1777,7 @@ MonoBehaviour:
   m_ChildAlignment: 0
   m_StartCorner: 0
   m_StartAxis: 0
-  m_CellSize: {x: 169.04823, y: 167.88603}
+  m_CellSize: {x: 128.03618, y: 127.16452}
   m_Spacing: {x: -5, y: -5}
   m_Constraint: 0
   m_ConstraintCount: 2
@@ -4086,6 +4105,17 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+      - m_Target: {fileID: 95385272737757588}
+        m_MethodName: SetTrigger
+        m_Mode: 5
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: PopulateTiles
+          m_BoolArgument: 0
+        m_CallState: 2
     m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
       Culture=neutral, PublicKeyToken=null
 --- !u!114 &114807660498576220
@@ -4524,6 +4554,17 @@ MonoBehaviour:
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 95385272737757588}
+        m_MethodName: SetTrigger
+        m_Mode: 5
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: PopulateTiles
           m_BoolArgument: 0
         m_CallState: 2
     m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
@@ -5216,7 +5257,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.038317923, y: 0.31550524}
   m_AnchorMax: {x: 0.3084375, y: 0.42800003}
-  m_AnchoredPosition: {x: 1.5999756, y: -0.30999756}
+  m_AnchoredPosition: {x: 1.5998535, y: -0.30999756}
   m_SizeDelta: {x: 3.4000244, y: -2}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!224 &224040208618194706
@@ -5486,7 +5527,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.038317923, y: 0.13514867}
   m_AnchorMax: {x: 0.3084375, y: 0.24349478}
-  m_AnchoredPosition: {x: 1.0999756, y: -0.5999756}
+  m_AnchoredPosition: {x: 1.0998535, y: -0.5999756}
   m_SizeDelta: {x: 2.4000244, y: 3}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!224 &224326963500079562

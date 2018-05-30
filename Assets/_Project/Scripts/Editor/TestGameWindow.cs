@@ -16,8 +16,10 @@ public class TestGameWindow : EditorWindow {
 	private GameSettings settings;
 	private IEnumerator coroutine;
 	private TicTacToeBoard runningBoard, drawnGameBoard;
+	private TileControllerList tileControllers;
+	private BoardController boardController;
 
-	[MenuItem("Debug/Play Test TTT Game")]
+	[MenuItem("Debug/Game and Animations")]
 	public static void OpenWindow() {
 		TestGameWindow window = GetWindow<TestGameWindow>("Test TTT Game");
 		window.minSize = new Vector2(600, 480);
@@ -27,6 +29,7 @@ public class TestGameWindow : EditorWindow {
 		runningBoard = LoadAssetAtPath<TicTacToeBoard>(GUIDToAssetPath(FindAssets("RunningBoard")[0]));
 		settings = LoadAssetAtPath<GameSettings>(GUIDToAssetPath(FindAssets("GlobalGameSettings")[0]));
 		changeTurnRequest = LoadAssetAtPath<GameEvent>(GUIDToAssetPath(FindAssets("ChangeTurnRequest")[0]));
+		tileControllers = LoadAssetAtPath<TileControllerList>(GUIDToAssetPath(FindAssets($"t:{typeof(TileControllerList).Name}")[0]));
 	}
 
 	private void Update() {
@@ -42,54 +45,77 @@ public class TestGameWindow : EditorWindow {
 		if (gameController == null) {
 			gameController = GameObject.FindGameObjectWithTag("GameController").GetComponent<GameController>();
 		}
-
+		
 		if (!Application.isPlaying) {
 			GUILayout.Label("Editor must be in play mode in order to test.");
 		} else if (!gameController.InGame){
 			GUILayout.Label("Game must be started in order to test.");
 		} else if (runningTestGame) {
 			GUILayout.Label("Test game running...");
-		} else {	
-			GUILayout.Label("Select desired winning line.");
+		} else {
+			EditorGUILayout.LabelField("Game Testing", EditorStyles.boldLabel);
+			GUILayout.Label("Select desired game-ending state.");
 
-			EditorGUILayout.BeginHorizontal();
-			{
-				// Generate row buttons.
-				for (int i = 0; i < settings.TilesPerSide; i++) {
-					if (GUILayout.Button($"Row {i + 1}")) {
-						runningTestGame = true;
-						coroutine = RunTestGame(GenerateFullGame(new DesiredEndGame(GameEndType.Row, i)));
-					}
+			DrawGameTestingButtons();
+			
+			EditorGUILayout.Space();
+			EditorGUILayout.Space();
+			
+			EditorGUILayout.LabelField("Animation Testing", EditorStyles.boldLabel);
+			GUILayout.Label("Select desired animation.");
+
+			DrawAnimationTestingButtons();
+		}
+	}
+
+	private void DrawAnimationTestingButtons() {
+		if (boardController == null) {
+			boardController = FindObjectOfType<BoardController>();
+		}
+		
+		if (GUILayout.Button("Tile Population")) {
+			boardController.GetComponent<Animator>().SetTrigger("PopulateTiles");
+		}
+	}
+
+	private void DrawGameTestingButtons() {
+		EditorGUILayout.BeginHorizontal();
+		{
+			// Generate row buttons.
+			for (int i = 0; i < settings.TilesPerSide; i++) {
+				if (GUILayout.Button($"Row {i + 1}")) {
+					runningTestGame = true;
+					coroutine = RunTestGame(GenerateFullGame(new DesiredEndGame(GameEndType.Row, i)));
 				}
-			} EditorGUILayout.EndHorizontal();
-
-			EditorGUILayout.BeginHorizontal();
-			{
-				// Generate column buttons.
-				for (int i = 0; i < settings.TilesPerSide; i++) {
-					if (GUILayout.Button($"Column {i + 1}")) {
-						runningTestGame = true;
-						coroutine = RunTestGame(GenerateFullGame(new DesiredEndGame(GameEndType.Column, i)));
-					}
-				}
-			} EditorGUILayout.EndHorizontal();
-
-			EditorGUILayout.BeginHorizontal();
-			{
-				// Generate diagonal buttons.
-				for (int i = 0; i < 2; i++) {
-					string buttonText = i == 0 ? "\\ Diagonal" : "/ Diagonal";
-					if (GUILayout.Button(buttonText)) {
-						runningTestGame = true;
-						coroutine = RunTestGame(GenerateFullGame(new DesiredEndGame(GameEndType.Diagonal, i)));
-					}
-				}
-			} EditorGUILayout.EndHorizontal();
-
-			if (GUILayout.Button("Draw")) {
-				runningTestGame = true;
-				coroutine = RunTestGame(GenerateFullGame(new DesiredEndGame(GameEndType.Draw, -1)));
 			}
+		} EditorGUILayout.EndHorizontal();
+
+		EditorGUILayout.BeginHorizontal();
+		{
+			// Generate column buttons.
+			for (int i = 0; i < settings.TilesPerSide; i++) {
+				if (GUILayout.Button($"Column {i + 1}")) {
+					runningTestGame = true;
+					coroutine = RunTestGame(GenerateFullGame(new DesiredEndGame(GameEndType.Column, i)));
+				}
+			}
+		} EditorGUILayout.EndHorizontal();
+
+		EditorGUILayout.BeginHorizontal();
+		{
+			// Generate diagonal buttons.
+			for (int i = 0; i < 2; i++) {
+				string buttonText = i == 0 ? "\\ Diagonal" : "/ Diagonal";
+				if (GUILayout.Button(buttonText)) {
+					runningTestGame = true;
+					coroutine = RunTestGame(GenerateFullGame(new DesiredEndGame(GameEndType.Diagonal, i)));
+				}
+			}
+		} EditorGUILayout.EndHorizontal();
+
+		if (GUILayout.Button("Draw")) {
+			runningTestGame = true;
+			coroutine = RunTestGame(GenerateFullGame(new DesiredEndGame(GameEndType.Draw, -1)));
 		}
 	}
 
@@ -238,7 +264,6 @@ public class TestGameWindow : EditorWindow {
 	// Handles drawing board and raising changeTurnRequest to progress game flow.
 	private IEnumerator RunTestGame(MoveHistory generatedGame) {
 		BoardController boardController = FindObjectOfType<BoardController>();
-		List<TileController> tiles = boardController.TileControllerList;
 		
 		boardController.ResetBoard();
 		
@@ -250,7 +275,7 @@ public class TestGameWindow : EditorWindow {
 			for (int row = 0; row < settings.TilesPerSide; row++) {
 				for (int column = 0; column < settings.TilesPerSide; column++) {
 					if (currentNode.Value.Matrix[row][column] != null) {
-						TileController correspondingTile = tiles.Find(tile => tile.Row == row && tile.Column == column);
+						TileController correspondingTile = tileControllers.List.Find(tile => tile.Row == row && tile.Column == column);
 						correspondingTile.SetPieceImage(currentNode.Value.Matrix[row][column].Image);
 					}
 				}

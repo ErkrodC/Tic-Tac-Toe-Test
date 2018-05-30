@@ -137,7 +137,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fa8dc5150d3cefe4998245b4e14e2d16, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  TileInfo: {fileID: 0}
+  Row: 0
+  Column: 0
+  IsOccupied: 0
   runningBoard: {fileID: 11400000, guid: 05dbe82f8f1ce8d46b603e30576b19cd, type: 2}
   settings: {fileID: 11400000, guid: 476acd98f06fd3e44bd9d8c1d94550bd, type: 2}
   currentTurn: {fileID: 11400000, guid: dbb9aafc5b88e0f49ad6037c8ef6a20f, type: 2}
@@ -149,7 +151,7 @@ MonoBehaviour:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1915275118124152}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: -765806418, guid: f70555f144d8491a825f0804e09c671c, type: 3}
   m_Name: 
