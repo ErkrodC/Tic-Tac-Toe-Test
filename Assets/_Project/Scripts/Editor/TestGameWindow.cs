@@ -1,7 +1,7 @@
-﻿using System.Collections;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEditor;
 using System.Linq;
+using System.Collections;
 using System.Collections.Generic;
 using MoveHistory = System.Collections.Generic.LinkedList<TicTacToeBoard>;
 using Random = UnityEngine.Random;
@@ -19,10 +19,10 @@ public class TestGameWindow : EditorWindow {
 	private TileControllerList tileControllers;
 	private BoardController boardController;
 
-	[MenuItem("Debug/Game and Animations")]
+	[MenuItem("Debug/Game and Animations Test")]
 	public static void OpenWindow() {
 		TestGameWindow window = GetWindow<TestGameWindow>("Test TTT Game");
-		window.minSize = new Vector2(600, 480);
+		window.minSize = new Vector2(400, 400);
 	}
 
 	private void OnEnable() {
