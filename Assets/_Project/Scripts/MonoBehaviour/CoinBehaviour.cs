@@ -14,6 +14,7 @@ public class CoinBehaviour : MonoBehaviour {
 	
 	// start animation when gameObject is enabled
 	private void OnEnable() {
+		transform.position = startPosition;
 		StartCoroutine(LaunchCoin());
 	}
 
@@ -26,7 +27,7 @@ public class CoinBehaviour : MonoBehaviour {
 	// Main coin animation coroutine
 	private IEnumerator LaunchCoin() {
 		float startTime = Time.time;
-		float xVelocity = Random.Range(0.001f, 0.004f);
+		float xVelocity = Random.Range(0.0013f, 0.004f);
 		xVelocity *= StartsInBottomLeftCorner ? 1 : -1; 
 
 		// animation loop
@@ -34,9 +35,9 @@ public class CoinBehaviour : MonoBehaviour {
 		do {
 			timeSinceStart = Time.time - startTime;
 			// y value is simple distance formula (i.e. y = at^2 + vt)
-			transform.Translate(xVelocity, -.005f * Mathf.Pow(timeSinceStart, 2) + .01f * timeSinceStart, 0);
+			transform.Translate(xVelocity, -.007f * Mathf.Pow(timeSinceStart, 2) + .013f * timeSinceStart, 0);
 			yield return null;
-		} while (timeSinceStart < 3);
+		} while (timeSinceStart < 2.75);
 
 		gameObject.SetActive(false);
 	}
