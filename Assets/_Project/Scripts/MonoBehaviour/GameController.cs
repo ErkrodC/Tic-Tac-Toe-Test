@@ -11,7 +11,7 @@ public class GameController : MonoBehaviour {
 	[HideInInspector] public bool InGame = false;
 	
 	public TicTacToeBoard RunningBoard;
-	[SerializeField] private GameEvent gameStartedEvent, turnChangedEvent, displayGameOverPanelRequest, resetRunningGameUIRequest;
+	[SerializeField] private GameEvent gameStartedEvent, turnChangedEvent, displayGameOverPanelRequest, resetRunningGameUIRequest, gameWonEvent;
 	[SerializeField] private GameSettings settings;
 	[SerializeField] private ToggleGroup player1PieceToggleGroup, player2PieceToggleGroup, gameModeToggleGroup;
 	[SerializeField] private CurrentTurn currentTurn;
@@ -57,9 +57,11 @@ public class GameController : MonoBehaviour {
 		switch (gameOverState) {
 			case GameOverState.Player1Wins:
 				gameOverStateText.text = "Player One Wins!";
+				gameWonEvent.Raise();
 				break;
 			case GameOverState.Player2Wins:
 				gameOverStateText.text = "Player Two Wins!";
+				gameWonEvent.Raise();
 				break;
 			case GameOverState.Tie:
 				gameOverStateText.text = "Tie";

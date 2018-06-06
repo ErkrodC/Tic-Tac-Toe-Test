@@ -18,6 +18,7 @@ public class TestGameWindow : EditorWindow {
 	private TicTacToeBoard runningBoard, drawnGameBoard;
 	private TileControllerList tileControllers;
 	private BoardController boardController;
+	private CoinSpewer coinSpewer;
 
 	[MenuItem("Debug/Game and Animations Test")]
 	public static void OpenWindow() {
@@ -69,12 +70,14 @@ public class TestGameWindow : EditorWindow {
 	}
 
 	private void DrawAnimationTestingButtons() {
-		if (boardController == null) {
-			boardController = FindObjectOfType<BoardController>();
+		if (GUILayout.Button("Tile Population")) {
+			if (boardController == null) { boardController = FindObjectOfType<BoardController>(); }
+			boardController.GetComponent<Animator>().SetTrigger("PopulateTiles");
 		}
 		
-		if (GUILayout.Button("Tile Population")) {
-			boardController.GetComponent<Animator>().SetTrigger("PopulateTiles");
+		if (GUILayout.Button("Coin Spew")) {
+			if (coinSpewer == null) { coinSpewer = FindObjectOfType<CoinSpewer>(); }
+			coinSpewer.OnGameWin();
 		}
 	}
 
