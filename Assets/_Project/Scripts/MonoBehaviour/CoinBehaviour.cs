@@ -4,14 +4,15 @@ using Random = UnityEngine.Random;
 
 public class CoinBehaviour : MonoBehaviour {
 
-	public bool StartsInBottomLeftCorner; // set by CoinSpewer.cs during coin pool initialization
+	[HideInInspector] public bool StartsInBottomLeftCorner; // set by CoinSpewer.cs during coin pool initialization
+	[HideInInspector] public static float ScreenXDistance, ScreenYDistance;
 	private Vector3 startPosition;
 
 	// initial transform.position is set by CoinSpewer.cs, either to bottomLeft or bottomRight corner of screen.
 	private void Awake() {
 		startPosition = transform.position;
 	}
-	
+
 	// start animation when gameObject is enabled
 	private void OnEnable() {
 		transform.position = startPosition;
@@ -26,18 +27,19 @@ public class CoinBehaviour : MonoBehaviour {
 
 	// Main coin animation coroutine
 	private IEnumerator LaunchCoin() {
-		float startTime = Time.time;
-		float xVelocity = Random.Range(0.0013f, 0.004f);
-		xVelocity *= StartsInBottomLeftCorner ? 1 : -1; 
+		float startTime = Time.realtimeSinceStartup;
+		float xVelocity = Random.Range(.001f * ScreenXDistance, .004f * ScreenXDistance);
+		xVelocity *= StartsInBottomLeftCorner ? 1 : -1;
 
 		// animation loop
 		float timeSinceStart;
 		do {
-			timeSinceStart = Time.time - startTime;
+			timeSinceStart = Time.realtimeSinceStartup - startTime;
 			// y value is simple distance formula (i.e. y = at^2 + vt)
-			transform.Translate(xVelocity, -.007f * Mathf.Pow(timeSinceStart, 2) + .013f * timeSinceStart, 0);
+			float yVelocity = -(.008f * ScreenYDistance) * Mathf.Pow(timeSinceStart, 2) + (Random.Range(.013f,.015f) * ScreenYDistance) * timeSinceStart;
+			transform.Translate(xVelocity, yVelocity, 0);
 			yield return null;
-		} while (timeSinceStart < 2.75);
+		} while (timeSinceStart < 3);
 
 		gameObject.SetActive(false);
 	}

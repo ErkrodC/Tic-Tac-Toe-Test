@@ -53,5 +53,8 @@ public class CoinSpewer : MonoBehaviour {
 
 		bottomLeftCorner = spewerCanvasCorners[0];
 		bottomRightCorner = spewerCanvasCorners[3];
+
+		CoinBehaviour.ScreenXDistance = Mathf.Abs(bottomLeftCorner.x - bottomRightCorner.x);
+		CoinBehaviour.ScreenYDistance = Mathf.Abs(bottomLeftCorner.y - spewerCanvasCorners[1].y);
 	}
 }
