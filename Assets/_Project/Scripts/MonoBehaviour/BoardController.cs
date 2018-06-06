@@ -42,6 +42,18 @@ public class BoardController : MonoBehaviour {
 		}
 	}
 
+	public void HighlightWinningTiles() {
+		// gather tile controllers for tiles that are not involved in win
+		List<TileController> nonWinningTiles = tileControllers.List.FindAll(tileController => 
+			!runningBoard.WinningTiles.Exists(tileCoord => 
+				tileCoord.Row == tileController.Row && tileCoord.Column == tileController.Column));
+
+		// black out those uninvolved tiles
+		foreach (TileController tileController in nonWinningTiles) {
+			tileController.BlackoutTilePiece();
+		}
+	}
+
 	// used to give UI tile game objects their correct coordinates according to their sibling index 
 	private void SetTileIndices() {
 		foreach (TileController tileController in tileControllers.List) {

@@ -61,6 +61,8 @@ GameObject:
   - component: {fileID: 95011142617610174}
   - component: {fileID: 114718722825031430}
   - component: {fileID: 114930475576820844}
+  - component: {fileID: 114972818415269374}
+  - component: {fileID: 114541890309575436}
   m_Layer: 5
   m_Name: MainMenu
   m_TagString: Untagged
@@ -916,6 +918,7 @@ GameObject:
   - component: {fileID: 114802735548511838}
   - component: {fileID: 114534151545107980}
   - component: {fileID: 114955797356602098}
+  - component: {fileID: 114480712398827078}
   m_Layer: 5
   m_Name: Board
   m_TagString: Untagged
@@ -2319,6 +2322,7 @@ MonoBehaviour:
   resetRunningGameUIRequest: {fileID: 11400000, guid: 743c73772e86eba448aeeda271494d2c,
     type: 2}
   gameWonEvent: {fileID: 11400000, guid: 4d49d2e61df551f4d976afb2409ea4fe, type: 2}
+  gameTiedEvent: {fileID: 11400000, guid: de30bc06c44e81746a77d66e6dfd61a2, type: 2}
   settings: {fileID: 11400000, guid: 476acd98f06fd3e44bd9d8c1d94550bd, type: 2}
   player1PieceToggleGroup: {fileID: 114298210712002108}
   player2PieceToggleGroup: {fileID: 114100321586107486}
@@ -3122,6 +3126,34 @@ MonoBehaviour:
     m_TypeName: UnityEngine.UI.Toggle+ToggleEvent, UnityEngine.UI, Version=1.0.0.0,
       Culture=neutral, PublicKeyToken=null
   m_IsOn: 0
+--- !u!114 &114480712398827078
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1836418350146120}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d5bbc414ea0e5924fbed8d95e5a02b6e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Event: {fileID: 11400000, guid: de30bc06c44e81746a77d66e6dfd61a2, type: 2}
+  Response:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 225091214441888616}
+        m_MethodName: set_interactable
+        m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
+      Culture=neutral, PublicKeyToken=null
 --- !u!114 &114490794851090312
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -3264,6 +3296,34 @@ MonoBehaviour:
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: PopulateTiles
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
+      Culture=neutral, PublicKeyToken=null
+--- !u!114 &114541890309575436
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1072740005207200}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d5bbc414ea0e5924fbed8d95e5a02b6e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Event: {fileID: 11400000, guid: b92c0e9b760977e409489974c8c65511, type: 2}
+  Response:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 95011142617610174}
+        m_MethodName: SetTrigger
+        m_Mode: 5
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: Fade Out
           m_BoolArgument: 0
         m_CallState: 2
     m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
@@ -5053,6 +5113,17 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+      - m_Target: {fileID: 114167888474380890}
+        m_MethodName: HighlightWinningTiles
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
     m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
       Culture=neutral, PublicKeyToken=null
 --- !u!114 &114958331153908528
@@ -5104,6 +5175,34 @@ MonoBehaviour:
   m_FillAmount: 1
   m_FillClockwise: 1
   m_FillOrigin: 0
+--- !u!114 &114972818415269374
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1072740005207200}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d5bbc414ea0e5924fbed8d95e5a02b6e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Event: {fileID: 11400000, guid: 6a269abde33880f49bb95909323635ae, type: 2}
+  Response:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 95011142617610174}
+        m_MethodName: SetTrigger
+        m_Mode: 5
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: Fade In
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
+      Culture=neutral, PublicKeyToken=null
 --- !u!114 &114973644217466132
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -5988,7 +6087,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.957, y: 0.92200005}
   m_AnchorMax: {x: 0.99452084, y: 0.9925947}
-  m_AnchoredPosition: {x: -1743.9971, y: 0}
+  m_AnchoredPosition: {x: -1743.9927, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 1, y: 1}
 --- !u!224 &224411072815376356
@@ -6635,7 +6734,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.957, y: 0.92200005}
   m_AnchorMax: {x: 0.99452084, y: 0.9925947}
-  m_AnchoredPosition: {x: -1826.9971, y: 0}
+  m_AnchoredPosition: {x: -1826.9927, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 1, y: 1}
 --- !u!224 &224957668884674858

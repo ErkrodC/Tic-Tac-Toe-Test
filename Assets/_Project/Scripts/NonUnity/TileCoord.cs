@@ -1,6 +1,4 @@
-﻿using UnityEngine;
-
-public struct TileCoord {
+﻿public struct TileCoord {
 	public int Row, Column;
 
 	public TileCoord(int row, int column) {

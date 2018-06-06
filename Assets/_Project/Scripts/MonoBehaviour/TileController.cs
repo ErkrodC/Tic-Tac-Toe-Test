@@ -5,8 +5,8 @@ using UnityEngine.UI;
 public class TileController : MonoBehaviour {
 
 	// Tile info
-	[SerializeField] public int Row, Column;
-	[SerializeField] public bool IsOccupied;
+	[HideInInspector] public int Row, Column;
+	[HideInInspector] public bool IsOccupied;
 
 	[SerializeField] private TicTacToeBoard runningBoard;
 	[SerializeField] private GameSettings settings;
@@ -36,6 +36,7 @@ public class TileController : MonoBehaviour {
 
 	public void ResetTile() {
 		pieceImageComponent.enabled = false;
+		pieceImageComponent.color = Color.white;
 		pieceImageComponent.sprite = null;
 		IsOccupied = false;
 	}
@@ -45,4 +46,7 @@ public class TileController : MonoBehaviour {
 		pieceImageComponent.enabled = true;
 	}
 
+	public void BlackoutTilePiece() {
+		pieceImageComponent.color = Color.black;
+	}
 }
