@@ -12,12 +12,11 @@ public class TestGameWindow : EditorWindow {
 	private bool runningTestGame;
 	private const float MoveDelayThreshold = 0.1f;
 	private GameController gameController;
-	private GameEvent changeTurnRequest;
+	private GameEvent changeTurnRequest, boardTileAnimationRequest, bigWinAnimationRequest, coinSpewAnimationRequest;
 	private GameSettings settings;
 	private IEnumerator coroutine;
 	private TicTacToeBoard runningBoard, drawnGameBoard;
 	private TileControllerList tileControllers;
-	private BoardController boardController;
 	private CoinSpewer coinSpewer;
 
 	[MenuItem("Debug/Game and Animations Test")]
@@ -30,6 +29,9 @@ public class TestGameWindow : EditorWindow {
 		runningBoard = LoadAssetAtPath<TicTacToeBoard>(GUIDToAssetPath(FindAssets("RunningBoard")[0]));
 		settings = LoadAssetAtPath<GameSettings>(GUIDToAssetPath(FindAssets("GlobalGameSettings")[0]));
 		changeTurnRequest = LoadAssetAtPath<GameEvent>(GUIDToAssetPath(FindAssets("ChangeTurnRequest")[0]));
+		boardTileAnimationRequest = LoadAssetAtPath<GameEvent>(GUIDToAssetPath(FindAssets("BoardTileAnimationRequest")[0]));
+		bigWinAnimationRequest = LoadAssetAtPath<GameEvent>(GUIDToAssetPath(FindAssets("BigWinAnimationRequest")[0]));
+		coinSpewAnimationRequest = LoadAssetAtPath<GameEvent>(GUIDToAssetPath(FindAssets("CoinSpewAnimationRequest")[0]));
 		tileControllers = LoadAssetAtPath<TileControllerList>(GUIDToAssetPath(FindAssets($"t:{typeof(TileControllerList).Name}")[0]));
 	}
 
@@ -71,13 +73,15 @@ public class TestGameWindow : EditorWindow {
 
 	private void DrawAnimationTestingButtons() {
 		if (GUILayout.Button("Tile Population")) {
-			if (boardController == null) { boardController = FindObjectOfType<BoardController>(); }
-			boardController.GetComponent<Animator>().SetTrigger("PopulateTiles");
+			boardTileAnimationRequest.Raise();
 		}
 		
 		if (GUILayout.Button("Coin Spew")) {
-			if (coinSpewer == null) { coinSpewer = FindObjectOfType<CoinSpewer>(); }
-			coinSpewer.OnGameWin();
+			coinSpewAnimationRequest.Raise();
+		}
+		
+		if (GUILayout.Button("Big Win")) {
+			bigWinAnimationRequest.Raise();
 		}
 	}
 
