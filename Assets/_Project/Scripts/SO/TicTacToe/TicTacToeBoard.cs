@@ -3,10 +3,12 @@ using UnityEngine;
 
 public class TicTacToeBoard : ScriptableObject {
 	// TODO refactor to accomodate public Settings variable (i.e. modify SnapShotBoard and InitializeBoard to handle that variable and others more effectively
-	
+
+	[HideInInspector] public List<TileCoord> WinningTiles = new List<TileCoord>();
 	public int TilesPerSide;
 	public List<List<TicTacToePiece>> Matrix;
 	public GameSettings Settings;
+
 
 	// Returns a copy of the passed board
 	public static TicTacToeBoard SnapshotBoard(TicTacToeBoard boardToCopy) {
@@ -54,6 +56,7 @@ public class TicTacToeBoard : ScriptableObject {
 	// Checks if the passed board meets a tic tac toe end condiition.
 	public bool MeetsEndCondition(out GameOverState gameOverState) {
 		if (FullRowColumnOrDiagonalExists(out gameOverState)) {
+			
 			return true;
 		}
 
@@ -68,6 +71,8 @@ public class TicTacToeBoard : ScriptableObject {
 
 	// Checks if a full row, column or diagonal is found using the passed coordinates as a starting point
 	private bool FullRowColumnOrDiagonalExists(out GameOverState gameOverState) {
+		WinningTiles.Clear();
+		
 		// Check rows
 		for (int row = 0; row < TilesPerSide; row++) {
 			TicTacToePiece pieceToMatch = Matrix[row][0];
@@ -79,6 +84,11 @@ public class TicTacToeBoard : ScriptableObject {
 				
 				if (column == TilesPerSide - 1) { // full row found
 					gameOverState = pieceToMatch == Settings.Player1Piece ? GameOverState.Player1Wins : GameOverState.Player2Wins;
+					
+					for (int i = 0; i < TilesPerSide; i++) { // add winning tiles to WinningTiles field
+						WinningTiles.Add(new TileCoord(row, i));
+					}
+					
 					return true;
 				}
 			}
@@ -89,12 +99,17 @@ public class TicTacToeBoard : ScriptableObject {
 			TicTacToePiece pieceToMatch = Matrix[0][column];
 
 			for (int row = 0; row < TilesPerSide; row++) {
-				if (Matrix[row][column] == null || Matrix[row][column] != pieceToMatch) { //empty tile or mixed pieces on row, break loop to go to next row
+				if (Matrix[row][column] == null || Matrix[row][column] != pieceToMatch) { //empty tile or mixed pieces on column, break loop to go to next column
 					break;
 				}
 				
 				if (row == TilesPerSide - 1) { // full column found
 					gameOverState = pieceToMatch == Settings.Player1Piece ? GameOverState.Player1Wins : GameOverState.Player2Wins;
+					
+					for (int i = 0; i < TilesPerSide; i++) { // add winning tiles to WinningTiles field
+						WinningTiles.Add(new TileCoord(i, column));
+					}
+					
 					return true;
 				}
 			}
@@ -108,12 +123,17 @@ public class TicTacToeBoard : ScriptableObject {
 
 				int row = 0, column = 0;
 				for (int i = 0; i < TilesPerSide; i++) {
-					if (Matrix[row][column] == null || Matrix[row][column] != pieceToMatch) { //empty tile or mixed pieces on row, break loop to go to next row
+					if (Matrix[row][column] == null || Matrix[row][column] != pieceToMatch) { //empty tile or mixed pieces on diagonal, break loop to go to next diagonal
 						break;
 					}
 				
-					if (i == TilesPerSide - 1) { // full column found
+					if (i == TilesPerSide - 1) { // full diagonal found
 						gameOverState = pieceToMatch == Settings.Player1Piece ? GameOverState.Player1Wins : GameOverState.Player2Wins;
+						
+						for (int j = 0; j < TilesPerSide; j++) { // add winning tiles to WinningTiles field
+							WinningTiles.Add(new TileCoord(j, j));
+						}
+						
 						return true;
 					}
 
@@ -128,12 +148,17 @@ public class TicTacToeBoard : ScriptableObject {
 
 				int row = 0, column = TilesPerSide - 1;
 				for (int i = 0; i < TilesPerSide; i++) {
-					if (Matrix[row][column] == null || Matrix[row][column] != pieceToMatch) { //empty tile or mixed pieces on row, break loop to go to next row
+					if (Matrix[row][column] == null || Matrix[row][column] != pieceToMatch) { //empty tile or mixed pieces on diagonal, break loop to go to next diagonal
 						break;
 					}
 				
-					if (i == TilesPerSide - 1) { // full column found
+					if (i == TilesPerSide - 1) { // full diagonal found
 						gameOverState = pieceToMatch == Settings.Player1Piece ? GameOverState.Player1Wins : GameOverState.Player2Wins;
+						
+						for (int j = 0; j < TilesPerSide; j++) { // add winning tiles to WinningTiles field
+							WinningTiles.Add(new TileCoord(j, (TilesPerSide - 1) - j));
+						}
+						
 						return true;
 					}
 
@@ -156,4 +181,5 @@ public class TicTacToeBoard : ScriptableObject {
 
 		return true;
 	}
+
 }

@@ -12,7 +12,7 @@ public class TestGameWindow : EditorWindow {
 	private bool runningTestGame;
 	private const float MoveDelayThreshold = 0.1f;
 	private GameController gameController;
-	private GameEvent changeTurnRequest, boardTileAnimationRequest, bigWinAnimationRequest, coinSpewAnimationRequest;
+	private GameEvent changeTurnRequest, boardTileAnimationRequest, bigWinAnimationRequest, coinSpewAnimationRequest, mainMenuFadeInRequest, mainMenuFadeOutRequest;
 	private GameSettings settings;
 	private IEnumerator coroutine;
 	private TicTacToeBoard runningBoard, drawnGameBoard;
@@ -32,6 +32,8 @@ public class TestGameWindow : EditorWindow {
 		boardTileAnimationRequest = LoadAssetAtPath<GameEvent>(GUIDToAssetPath(FindAssets("BoardTileAnimationRequest")[0]));
 		bigWinAnimationRequest = LoadAssetAtPath<GameEvent>(GUIDToAssetPath(FindAssets("BigWinAnimationRequest")[0]));
 		coinSpewAnimationRequest = LoadAssetAtPath<GameEvent>(GUIDToAssetPath(FindAssets("CoinSpewAnimationRequest")[0]));
+		mainMenuFadeInRequest = LoadAssetAtPath<GameEvent>(GUIDToAssetPath(FindAssets("MainMenuFadeInRequest")[0]));
+		mainMenuFadeOutRequest = LoadAssetAtPath<GameEvent>(GUIDToAssetPath(FindAssets("MainMenuFadeOutRequest")[0]));
 		tileControllers = LoadAssetAtPath<TileControllerList>(GUIDToAssetPath(FindAssets($"t:{typeof(TileControllerList).Name}")[0]));
 	}
 
@@ -72,6 +74,18 @@ public class TestGameWindow : EditorWindow {
 	}
 
 	private void DrawAnimationTestingButtons() {
+		EditorGUILayout.BeginHorizontal();
+		{
+			if (GUILayout.Button("Main Menu Fade In")) {
+				mainMenuFadeInRequest.Raise();
+			}
+			
+			if (GUILayout.Button("Main Menu Fade Out")) {
+				mainMenuFadeOutRequest.Raise();
+			}
+		}
+		EditorGUILayout.EndHorizontal();
+		
 		if (GUILayout.Button("Tile Population")) {
 			boardTileAnimationRequest.Raise();
 		}
